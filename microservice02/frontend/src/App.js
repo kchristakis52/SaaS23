@@ -1,20 +1,20 @@
-import './App.css';
-import { Routes , Route } from 'react-router-dom';
-import Home from './Components/Pages/HomePage/HomePage';
-import Layout from './Components/Layout/Layout';
-import classes from './Components/Layout/Layout.module.css';
-import About from './Components/Pages/AboutPage/AboutPage';
+import { Routes, Route } from "react-router-dom";
+import Home from "./Components/Pages/HomePage/HomePage";
+import About from "./Components/Pages/AboutPage/AboutPage";
+import Toolbar from "./Components/Navigation/Toolbar/Toolbar";
+import Footer from "./Components/Navigation/Footer/Footer";
+
 function App() {
   return (
-    <div>
-      <Layout classname={classes.Layout}>
-        <Routes>
-        <Route path="/" exact component={Home} />
-        </Routes>
-      </Layout> 
+    <div className="App">
+      <Toolbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="about" element={<About />} />
+      </Routes>
+      <Footer />
     </div>
-    
   );
 }
 
-export default App; 
+export default App;
