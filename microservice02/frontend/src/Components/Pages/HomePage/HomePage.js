@@ -1,7 +1,7 @@
 import React from "react";
 import classes from "./HomePage.module.css";
 import Logo from "../../Logo/Logo";
-import Charts from "../Charts";
+import Charts from "./Charts";
 
 const Home = () => (
   <div className={classes.mainbody}>

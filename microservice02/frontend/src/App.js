@@ -5,7 +5,7 @@ import Toolbar from "./Components/Navigation/Toolbar/Toolbar";
 import Footer from "./Components/Navigation/Footer/Footer";
 import Login from "./Containers/LoginPage/LoginPage";
 import Logout from "./Containers/LogoutPage";
-import Charts from "./Components/Pages/Charts";
+import Charts from "./Components/Pages/HomePage/Charts";
 
 function App() {
   return (

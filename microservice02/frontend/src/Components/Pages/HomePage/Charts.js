@@ -1,6 +1,7 @@
 import React from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
+import classes from "./HomePage";
 
 const Charts = () => {
   const chartOptions1 = {
@@ -26,7 +27,7 @@ const Charts = () => {
 
     plotOptions: {
       series: {
-        animation: false,
+        animation: true,
       },
     },
 
@@ -63,7 +64,7 @@ const Charts = () => {
 
     plotOptions: {
       series: {
-        animation: false,
+        animation: true,
       },
     },
 
@@ -100,7 +101,7 @@ const Charts = () => {
 
     plotOptions: {
       series: {
-        animation: false,
+        animation: true,
       },
     },
 
@@ -116,11 +117,11 @@ const Charts = () => {
 
   const chartsList = [chartOptions1, chartOptions2, chartOptions3];
   return (
-    <div>
-      <div>
+    <p className={classes.mainbody}>
+      <p>
         <HighchartsReact highcharts={Highcharts} options={chartOptions1} />
-      </div>
-    </div>
+      </p>
+    </p>
   );
 };
 
