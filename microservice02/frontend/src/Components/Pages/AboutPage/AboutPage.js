@@ -7,6 +7,14 @@ const About = () => (
       About us:
       </h2>
     <p>
+    This website was created for the semester project of the course: <br />
+      "Software Technology Services" of NTUA ECE School.
+      <br /> Course is currently in the 8th semester.
+      <br /> <br />
+      Our team consists of: <br />  Panagiotis Hatzigiannakis, 
+      Alexandros Ioannidis , Konstantinos Christakis , Konstantinos Kefalas . 
+      <br /> The github repository for this whole project is in the navigation bar of
+      the page.
     </p>
   </div>
 );
