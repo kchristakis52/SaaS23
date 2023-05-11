@@ -3,7 +3,7 @@ import Home from "./Components/Pages/HomePage/HomePage";
 import About from "./Components/Pages/AboutPage/AboutPage";
 import Toolbar from "./Components/Navigation/Toolbar/Toolbar";
 import Footer from "./Components/Navigation/Footer/Footer";
-import Login from "./Components/Pages/LoginPage/LoginPage";
+import Login from "./Containers/LoginPage/LoginPage";
 
 function App() {
   return (

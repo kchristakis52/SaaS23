@@ -6,6 +6,8 @@ const Home = () => (
   <div className={classes.mainbody}>
     <p>
         <Logo />
+        Press on a diagram type to see how it works , or login with your Google account to start
+        creating youw diagrams . 
     </p>
     </div>
 );

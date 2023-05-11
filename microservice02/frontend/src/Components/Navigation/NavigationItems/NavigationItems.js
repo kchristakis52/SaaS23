@@ -13,8 +13,8 @@ const NavigationItems = () => {
         <NavigationItem link="https://github.com/ntua/SaaS23-20">
           Github
         </NavigationItem>
-        <NavigationItem link="/charts" auth={!token}>
-          Endpoints
+        <NavigationItem link="/newchart" auth={!token}>
+          New Chart
         </NavigationItem>
         <NavigationItem link="/login" auth={token}>
           Login
