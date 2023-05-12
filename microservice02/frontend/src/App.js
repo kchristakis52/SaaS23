@@ -6,6 +6,7 @@ import Footer from "./Components/Navigation/Footer/Footer";
 import Login from "./Containers/LoginPage/LoginPage";
 import Logout from "./Containers/LogoutPage";
 import Charts from "./Components/Pages/HomePage/Charts";
+import NewChartForm from "./Components/Pages/NewChartPage/NewChartPage";
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
         <Route path="about" element={<About />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
-        <Route path="charts" element={<Charts />} />
+        <Route path="newchart" element={<NewChartForm />} />
       </Routes>
       <Footer />
     </div>
