@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import HighchartsReact from "highcharts-react-official";
 import Highcharts from "highcharts";
 import classes from "./HomePage";
 
 const Charts = () => {
+  const [chartIndex, setChartIndex] = useState(0);
   const chartOptions1 = {
     chart: {
       type: "area",
@@ -116,12 +117,25 @@ const Charts = () => {
   };
 
   const chartsList = [chartOptions1, chartOptions2, chartOptions3];
+
+  const handleChartChange = (index) => {
+    setChartIndex(index);
+  };
+
   return (
-    <p className={classes.mainbody}>
-      <p>
-        <HighchartsReact highcharts={Highcharts} options={chartOptions1} />
+    <div>
+      <button onClick={() => handleChartChange(0)}>line</button>
+      <button onClick={() => handleChartChange(1)}>area</button>
+      <button onClick={() => handleChartChange(2)}>bar</button>
+      <p className={classes.mainbody}>
+        <p>
+          <HighchartsReact
+            highcharts={Highcharts}
+            options={chartsList[chartIndex]}
+          />
+        </p>
       </p>
-    </p>
+    </div>
   );
 };
 

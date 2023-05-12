@@ -4,13 +4,15 @@ import Logo from "../../Logo/Logo";
 import Charts from "./Charts";
 
 const Home = () => (
-  <div className={classes.mainbody}>
+  <p className={classes.mainbody}>
     <p>
       <Logo />
+      <p>
+        Press on a diagram type to see how it works , or login with your Google
+        account to start creating your diagrams .
+      </p>
       <Charts />
-      Press on a diagram type to see how it works , or login with your Google
-      account to start creating youw diagrams .
     </p>
-  </div>
+  </p>
 );
 export default Home;
