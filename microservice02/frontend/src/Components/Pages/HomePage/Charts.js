@@ -40,6 +40,22 @@ const Charts = () => {
         ],
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            legend: {
+              layout: "horizontal",
+              align: "center",
+              verticalAlign: "bottom",
+            },
+          },
+        },
+      ],
+    },
   };
 
   const chartOptions2 = {
@@ -77,6 +93,22 @@ const Charts = () => {
         ],
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            legend: {
+              layout: "horizontal",
+              align: "center",
+              verticalAlign: "bottom",
+            },
+          },
+        },
+      ],
+    },
   };
 
   const chartOptions3 = {
@@ -114,6 +146,22 @@ const Charts = () => {
         ],
       },
     ],
+    responsive: {
+      rules: [
+        {
+          condition: {
+            maxWidth: 500,
+          },
+          chartOptions: {
+            legend: {
+              layout: "horizontal",
+              align: "center",
+              verticalAlign: "bottom",
+            },
+          },
+        },
+      ],
+    },
   };
 
   const chartsList = [chartOptions1, chartOptions2, chartOptions3];
