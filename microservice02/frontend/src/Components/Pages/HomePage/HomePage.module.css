@@ -1,6 +1,6 @@
 .mainbody {
   position: fixed;
-  top: 80px; /* Header Height */
+  top: 100px; /* Header Height */
   bottom: auto;
   width: 100%;
   background-color: rgb(209, 207, 207);
