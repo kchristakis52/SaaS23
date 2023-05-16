@@ -5,7 +5,9 @@ import classes from "./HomePage";
 import Button from "@mui/material/Button";
 import HC_sankey from "highcharts/modules/sankey";
 import HC_depwheel from "highcharts/modules/dependency-wheel";
+import HighchartsMore from 'highcharts/highcharts-more'
 
+HighchartsMore(Highcharts); 
 HC_sankey(Highcharts);
 HC_depwheel(Highcharts);
 
@@ -337,7 +339,7 @@ const Charts = () => {
     ],
   };
 
-  const chartsList = [PieDiagram, LineDiagram, ColumnDiagram, DependencyWheel];
+  const chartsList = [PieDiagram, LineDiagram, ColumnDiagram, DependencyWheel] ;
 
   const handleChartChange = (index) => {
     setChartIndex(index);
