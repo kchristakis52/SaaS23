@@ -6,22 +6,33 @@ const NavigationItems = () => {
   let token = false;
   if (localStorage.getItem("token")) token = true;
   return (
-    <nav className="navbar">
-      <h1>My Charts</h1>
-      <nav className="navbar">
-        <NavigationItem link="/">Home</NavigationItem>
-        <NavigationItem link="https://github.com/ntua/SaaS23-20">
-          Github
-        </NavigationItem>
-        <NavigationItem link="/newchart" auth={token}>New Chart</NavigationItem>
-        <NavigationItem link="/login" auth={token}>
-          Login
-        </NavigationItem>
-        <NavigationItem link="/logout" auth={!token}>
-          Logout
-        </NavigationItem>
+    <div>
+      <nav className="gheader">
+        <div className="logo-list-container">
+          <a className="logo" href="/">
+            MyCharts
+          </a>
+          <ul className="navigation-list">
+            <li>
+              <NavigationItem link="/newchart">Show All</NavigationItem>
+            </li>
+            <li>
+              <NavigationItem link="/newchart" auth={!token}>
+                New Chart
+              </NavigationItem>
+            </li>
+          </ul>
+        </div>
+
+        <div className="login-container">
+          {token ? (
+            <NavigationItem link="/logout">Logout</NavigationItem>
+          ) : (
+            <NavigationItem link="/login">Login</NavigationItem>
+          )}
+        </div>
       </nav>
-    </nav>
+    </div>
   );
 };
 
