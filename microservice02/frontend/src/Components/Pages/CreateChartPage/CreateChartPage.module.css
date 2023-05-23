@@ -1,9 +1,5 @@
 .mainbody {
-<<<<<<< HEAD
   position: fixed;
-=======
-  position: absolute;
->>>>>>> 94f45b26d55fe8fbb68ce24470ce192c447c114e
   top: 100px; /* Header Height */
   width: 100%;
   background-color: rgb(209, 207, 207);

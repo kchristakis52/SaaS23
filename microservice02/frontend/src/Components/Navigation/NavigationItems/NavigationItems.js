@@ -14,12 +14,6 @@ const NavigationItems = () => {
           </a>
           <ul className="navigation-list">
             <li>
-<<<<<<< HEAD
-=======
-              <NavigationItem link="/newchart">New Chart</NavigationItem>
-            </li>
-            <li>
->>>>>>> 94f45b26d55fe8fbb68ce24470ce192c447c114e
               <NavigationItem link="/newchart" auth={!token}>
                 New Chart
               </NavigationItem>
