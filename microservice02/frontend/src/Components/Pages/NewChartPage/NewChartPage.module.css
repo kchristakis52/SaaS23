@@ -1,5 +1,5 @@
 .mainbody {
-  position: fixed;
+  position: absolute;
   top: 100px; /* Header Height */
   width: 100%;
   background-color: rgb(209, 207, 207);
@@ -22,5 +22,5 @@
 .mainbody Button {
   padding-right: 5px;
   text-align: center;
-  margin-right: 20px;
+  margin-right: 0px;
 }
