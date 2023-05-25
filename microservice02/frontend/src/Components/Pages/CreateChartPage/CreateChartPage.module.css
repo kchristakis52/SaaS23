@@ -2,7 +2,9 @@
   position: absolute;
   top: 100px; /* Header Height */
   width: 100%;
+  max-height: fit-content;
   background-color: rgb(209, 207, 207);
+  margin-bottom: auto;
 }
 
 .mainbody h2 {
@@ -14,13 +16,12 @@
   text-align: center;
 }
 .mainbody carousel-container {
-  max-width: 750px;
+  max-width: auto;
 }
 .mainbody carousel-item {
-  height: 100vh;
   min-width: 100%;
   width: 100%;
-  display: grid;
+  display: flex;
   align-items: center;
   justify-content: center;
   transition: 1s cubic-bezier(0.39, 0.575, 0.565, 1);
