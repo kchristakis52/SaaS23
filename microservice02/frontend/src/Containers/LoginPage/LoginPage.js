@@ -41,5 +41,9 @@ export default function Login() {
     google.accounts.id.prompt();
   }, []);
 
-  return <div className={classes.mainbody}></div>;
+  return (
+    <div className={classes.mainbody}>
+      <div id="signInDiv"></div>
+    </div>
+  );
 }
