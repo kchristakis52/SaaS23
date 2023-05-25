@@ -8,7 +8,7 @@ const NewChartForm = () => {
     <p className={classes.mainbody}>
       <p>
         <Logo />
-        Hello
+        Hello {localStorage["username"]}
         <p>
           <form>
             <FormLabel>

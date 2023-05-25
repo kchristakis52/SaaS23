@@ -20,6 +20,7 @@
   text-align: center;
 }
 .mainbody Button {
+  position: abosolute;
   padding-right: 5px;
   text-align: center;
   margin-right: 0px;

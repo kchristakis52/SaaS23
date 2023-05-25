@@ -1,5 +1,6 @@
 import React from "react";
 import classes from "./CreateChartPage.module.css";
+import Carousel from "react-responsive-carousel";
 
 const CreateChart = () => {
   return (
