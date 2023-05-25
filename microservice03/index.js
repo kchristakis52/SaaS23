@@ -13,38 +13,10 @@ const client = new MongoClient(uri);
 
 app.use(express.json());
 
-// Define the API route to handle the CSV upload
-app.post('/upload', upload.single('csv'), async (req, res) => {
-  try {
-    // Connect to MongoDB
-    await client.connect();
-    console.log('Connected to MongoDB');
-
-    const db = client.db('uploads');
-    const collection = db.collection('chartcsv');
-
-    // Create a new document
-    const newCSV = {
-      filename: req.file.originalname
-      
-    };
-
-    // Insert the document into the collection
-    const result = await collection.insertOne(newCSV);
-
-    res.status(200).json({ message: 'CSV uploaded successfully', insertedId: result.insertedId });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Failed to upload CSV' });
-  } finally {
-    // Close the MongoDB connection
-    await client.close();
-    console.log('Disconnected from MongoDB');
-  }
-});
-
 app.post('/parse-csv', upload.single('csv'), (req, res) => {
   try {
+    let chartname = req.file.originalname
+    chartname = chartname.slice(0, chartname.length - 4)
     const results = [];
 
     // Read the CSV file using the csv-parser library
@@ -56,7 +28,7 @@ app.post('/parse-csv', upload.single('csv'), (req, res) => {
       })
       .on('end', () => {
         // Send the parsed CSV data as the API response
-        res.status(200).json({ data: results });
+        res.status(200).json({ [chartname]: results });
       });
   } catch (err) {
     console.error(err);
