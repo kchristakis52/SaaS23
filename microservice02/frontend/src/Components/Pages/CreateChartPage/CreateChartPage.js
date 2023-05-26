@@ -16,14 +16,16 @@ import { Carousel } from "react-responsive-carousel";
 import "rsuite/dist/rsuite.min.css";
 import FileDownloadIcon from "@rsuite/icons/FileDownload";
 import { Dropdown } from "rsuite/";
+import DropdownItem from "rsuite/esm/Dropdown/DropdownItem";
 import DragDropFile from "./DragAndDrop";
 
 const CreateChart = () => {
   const containerStyles = {
-    width: "500px",
+    width: "650px",
     height: "300px",
     margin: "auto",
     border: "1px solid #ccc",
+    padding: "2px",
   };
 
   return (
@@ -50,21 +52,24 @@ const CreateChart = () => {
             <img src={WordcloudDiagram} alt=""></img>
           </div>
         </Carousel>
-        <p style={{ width: "500px" }}>
+        <p style={{ width: "650px" }}>
           Download chart description template for
           <Dropdown
-            className="dropdown"
+            className="dropdown-menu"
             title="Diagrams"
-            style={{ margin: "2px" }}
+            style={{
+              margin: "2px",
+              maxheight: "100px",
+            }}
           >
-            <Dropdown.Item
+            <DropdownItem
               as="a"
               href={PieDiagramTemplate}
               download="pie-diagram-template.csv"
               icon={<FileDownloadIcon />}
             >
               Pie Diagram
-            </Dropdown.Item>
+            </DropdownItem>
             <Dropdown.Item
               as="a"
               href={LineDiagramTemplate}
@@ -73,7 +78,6 @@ const CreateChart = () => {
             >
               Line Diagram
             </Dropdown.Item>
-
             <Dropdown.Item
               as="a"
               href={ColumnDiagramTemplate}
@@ -99,8 +103,8 @@ const CreateChart = () => {
               Word cloud Diagram
             </Dropdown.Item>
           </Dropdown>
+          <DragDropFile />
         </p>
-        <DragDropFile />
       </div>
     </div>
   );

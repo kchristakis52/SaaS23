@@ -2571,7 +2571,7 @@ const Charts = () => {
         color="primary"
         onClick={() => handleChartChange(5)}
       >
-        Organization
+        Wordcloud
       </Button>
       <p className={classes.mainbody}>
         <p>
