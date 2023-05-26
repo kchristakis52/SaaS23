@@ -1,10 +1,9 @@
 import classes from "./LoginPage.module.css";
 import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
-import Button from "@mui/material/Button";
 
 export default function Login() {
-  const [user, setUser] = useState({});
+  const [setUser] = useState({});
 
   function handleCallbackResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
@@ -18,11 +17,6 @@ export default function Login() {
     setUser(userObject);
     document.getElementById("signInDiv").hidden = true;
     window.location.href = "http://localhost:3000/newchart";
-  }
-
-  function handleSignOut(event) {
-    setUser({});
-    document.getElementById("signInDiv").hidden = false;
   }
 
   useEffect(() => {
@@ -39,7 +33,7 @@ export default function Login() {
     });
 
     google.accounts.id.prompt();
-  }, []);
+  });
 
   return (
     <div className={classes.mainbody}>

@@ -2,9 +2,10 @@
   position: absolute;
   top: 100px; /* Header Height */
   width: 100%;
-  max-height: fit-content;
+  height: 100%;
   background-color: rgb(209, 207, 207);
   margin-bottom: auto;
+  overflow-y: scroll;
 }
 
 .mainbody h2 {
