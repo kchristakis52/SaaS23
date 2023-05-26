@@ -32,7 +32,7 @@ const NewChartForm = () => {
         <Button variant="contained" color="success">
           My Charts
         </Button>
-        <Button variant="contained" color="success" href="/createchart">
+        <Button variant="contained" color="success" href="/createchart" on>
           New Chart
         </Button>
         <Button variant="contained" color="success">
