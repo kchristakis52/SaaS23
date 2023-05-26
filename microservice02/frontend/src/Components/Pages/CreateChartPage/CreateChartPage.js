@@ -32,22 +32,22 @@ const CreateChart = () => {
       <div style={containerStyles}>
         <Carousel showArrows={true} autoPlay={true} infiniteLoop={true}>
           <div>
-            <img src={PieDiagram}></img>
+            <img src={PieDiagram} alt=""></img>
           </div>
           <div>
-            <img src={LineDiagram}></img>
+            <img src={LineDiagram} alt=""></img>
           </div>
           <div>
-            <img src={ColumnDiagram}></img>
+            <img src={ColumnDiagram} alt=""></img>
           </div>
           <div>
-            <img src={DependencyWheelDiagram}></img>
+            <img src={DependencyWheelDiagram} alt=""></img>
           </div>
           <div>
-            <img src={LineWithAnnotationsDiagram}></img>
+            <img src={LineWithAnnotationsDiagram} alt=""></img>
           </div>
           <div>
-            <img src={WordcloudDiagram}></img>
+            <img src={WordcloudDiagram} alt=""></img>
           </div>
         </Carousel>
         <p style={{ width: "500px" }}>

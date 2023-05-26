@@ -32,7 +32,7 @@ function DragDropFile() {
   const handleChange = function (e) {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
-      // handleFiles(e.target.files);
+      //handleFiles(e.target.files);
     }
   };
 
