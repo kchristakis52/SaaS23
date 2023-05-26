@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import HC_sankey from "highcharts/modules/sankey";
 import HC_depwheel from "highcharts/modules/dependency-wheel";
 import HighchartsMore from "highcharts/highcharts-more";
+require("highcharts/modules/wordcloud")(Highcharts);
 
 HighchartsMore(Highcharts);
 HC_sankey(Highcharts);
@@ -2460,6 +2461,7 @@ const Charts = () => {
       },
     ],
   };
+
   const text =
       "Chapter 1. Down the Rabbit-Hole " +
       "Alice was beginning to get very tired of sitting by her sister on the bank, and of having nothing to do: " +
@@ -2468,7 +2470,7 @@ const Charts = () => {
       "So she was considering in her own mind (as well as she could, for the hot day made her feel very sleepy " +
       "and stupid), whether the pleasure of making a daisy-chain would be worth the trouble of getting up and picking " +
       "the daisies, when suddenly a White Rabbit with pink eyes ran close by her.",
-    lines = text.replace(/[():'?0-9]+/g, "").split(/[,\. ]+/g),
+    lines = text.replace(/[():'?0-9]+/g, "").split(/[,. ]+/g),
     data = lines.reduce((arr, word) => {
       let obj = Highcharts.find(arr, (obj) => obj.name === word);
       if (obj) {
@@ -2569,7 +2571,7 @@ const Charts = () => {
         color="primary"
         onClick={() => handleChartChange(5)}
       >
-        Work Cloud
+        Organization
       </Button>
       <p className={classes.mainbody}>
         <p>
