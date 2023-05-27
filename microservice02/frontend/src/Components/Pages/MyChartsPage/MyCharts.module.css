@@ -7,16 +7,3 @@
   bottom: 10px;
   overflow-y: scroll;
 }
-
-.mainbody h2 {
-  padding: 10px;
-  text-align: center;
-}
-
-.mainbody p {
-  text-align: center;
-}
-.mainbody Button {
-  margin-right: 5px;
-  text-align: center;
-}

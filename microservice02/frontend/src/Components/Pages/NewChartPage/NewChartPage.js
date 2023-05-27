@@ -29,7 +29,11 @@ const NewChartForm = () => {
             </FormLabel>
           </form>
         </p>
-        <Button variant="contained" color="success">
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => (window.location.href = "/mycharts")}
+        >
           My Charts
         </Button>
         <Button
