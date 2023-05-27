@@ -3,17 +3,18 @@ import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
 
 export default function Login() {
-  const [setUser] = useState({});
+  const [user, setUser] = useState({});
 
   function handleCallbackResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
     let userObject = jwt_decode(response.credential);
     let token = response.credential;
     let username = userObject.name;
+    let email = userObject.email;
     localStorage.setItem("token", token);
     localStorage.setItem("username", username);
+    localStorage.setItem("email", email);
     console.log(userObject);
-    console.log(userObject.name);
     setUser(userObject);
     document.getElementById("signInDiv").hidden = true;
     window.location.href = "http://localhost:3000/newchart";

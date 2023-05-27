@@ -7,8 +7,9 @@ import Login from "./Containers/LoginPage/LoginPage";
 import Logout from "./Containers/LogoutPage";
 import NewChartForm from "./Components/Pages/NewChartPage/NewChartPage";
 import CreateChart from "./Components/Pages/CreateChartPage/CreateChartPage";
-import CSVUploader from "./Components/Pages/YourChart/GenerateChart";
-import ChartGenerator from "./Components/Pages/YourChart/GenerateChart";
+import ChartGenerator from "./Components/Pages/YourChart/LineChart";
+import BuyCredits from "./Components/Pages/BuyCredits/BuyCredisPage";
+import PieChartGenerator from "./Components/Pages/YourChart/GeneratePieChart";
 
 function App() {
   return (
@@ -21,7 +22,8 @@ function App() {
         <Route path="logout" element={<Logout />} />
         <Route path="newchart" element={<NewChartForm />} />
         <Route path="createchart" element={<CreateChart />} />
-        <Route path="yourchart" element={<ChartGenerator />} />
+        <Route path="yourchart" element={<PieChartGenerator />} />
+        <Route path="buycredits" element={<BuyCredits />} />
       </Routes>
       <Footer />
     </div>

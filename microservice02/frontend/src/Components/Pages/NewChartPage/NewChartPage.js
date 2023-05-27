@@ -32,10 +32,18 @@ const NewChartForm = () => {
         <Button variant="contained" color="success">
           My Charts
         </Button>
-        <Button variant="contained" color="success" href="/createchart">
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => (window.location.href = "/createchart")}
+        >
           New Chart
         </Button>
-        <Button variant="contained" color="success" href="/yourchart">
+        <Button
+          variant="contained"
+          color="success"
+          onClick={() => (window.location.href = "/buycredits")}
+        >
           Buy Credits
         </Button>
       </p>
