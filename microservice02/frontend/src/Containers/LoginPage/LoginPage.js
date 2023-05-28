@@ -23,8 +23,8 @@ export default function Login() {
   useEffect(() => {
     /*global google*/
     google.accounts.id.initialize({
-      client_id:
-        "256589905035-5tkvsgf7dpfpp916ntmbrjfj80im6ju7.apps.googleusercontent.com",
+      client_id: process.env.REACT_APP_GOOGLE_ID,
+      client_secret: process.env.REACT_APP_GOOGLE_SECRET,
       callback: handleCallbackResponse,
     });
 
