@@ -194,17 +194,8 @@ const PieChartGenerator = () => {
       </div>
 
       <p>
-        <h1>Pie Chart</h1>
-        <div
-          id="chart-container"
-          onDrop={handleDrop}
-          onDragOver={(event) => event.preventDefault()}
-        >
-          {chartOptions ? (
-            <HighchartsReact highcharts={Highcharts} options={chartOptions} />
-          ) : (
-            <p>Drop a CSV file here to generate a chart</p>
-          )}
+        <div>
+          {<HighchartsReact highcharts={Highcharts} options={chartOptions} />}
         </div>
       </p>
     </div>

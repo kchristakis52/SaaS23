@@ -7,3 +7,10 @@
   bottom: 10px;
   overflow-y: scroll;
 }
+
+.mainbody button {
+  margin-right: 5px;
+}
+.mainbody h3 {
+  text-align: center;
+}

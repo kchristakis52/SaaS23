@@ -10,7 +10,7 @@ const PreviousDiagrams = () => {
       id: 1,
       chartType: "Pie",
       image:
-        "https://etap.com/images/default-source/product/one-line-diagram/etap-intelligent-one-line-diagram.jpg?sfvrsn=60c7bf7f_30",
+        "https://www.tibco.com/sites/tibco/files/media_entity/2022-01/PieChart-01.svg",
       timestamp: "2023-05-26 10:30 AM",
       downloadLinks: {
         pdf: "https://example.com/diagram1.pdf",
@@ -22,8 +22,9 @@ const PreviousDiagrams = () => {
     {
       id: 2,
       chartType: "Line",
+
       image:
-        "https://www.tibco.com/sites/tibco/files/media_entity/2022-01/PieChart-01.svg",
+        "https://etap.com/images/default-source/product/one-line-diagram/etap-intelligent-one-line-diagram.jpg?sfvrsn=60c7bf7f_30",
       timestamp: "2023-05-25 02:45 PM",
       downloadLinks: {
         pdf: "https://example.com/diagram2.pdf",
@@ -106,7 +107,9 @@ const PreviousDiagrams = () => {
       {selectedDiagram && (
         <div>
           <h3>Preview</h3>
-          <img src={selectedDiagram.image} alt="Diagram Preview" />
+          <div style={{ textAlign: "center" }}>
+            <img src={selectedDiagram.image} alt="Diagram Preview" />
+          </div>
         </div>
       )}
     </div>

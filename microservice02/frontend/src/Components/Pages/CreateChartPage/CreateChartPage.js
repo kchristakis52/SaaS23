@@ -12,6 +12,7 @@ import PieDiagramTemplate from "../../../Assets/templates/pie-diagram-template.c
 import ColumnDiagramTemplate from "../../../Assets/templates/column-diagram-template.csv";
 import DependencyDiagramTemplate from "../../../Assets/templates/dependency-wheel-diagram-template.csv";
 import WordcloudDiagramTemplate from "../../../Assets/templates/wordcloud-diagram-template.csv";
+import LineWithAnnotationsTemplate from "../../../Assets/templates/line-with-annotations-diagram-template.csv";
 import { Carousel } from "react-responsive-carousel";
 import "rsuite/dist/rsuite.min.css";
 import FileDownloadIcon from "@rsuite/icons/FileDownload";
@@ -102,6 +103,17 @@ const CreateChart = () => {
             >
               Word cloud Diagram
             </Dropdown.Item>
+            <Dropdown.Item
+              as="a"
+              href={LineWithAnnotationsTemplate}
+              download="line-with-annotations-diagram-template.csv"
+              icon={<FileDownloadIcon />}
+            >
+              Line with annotations Diagram
+            </Dropdown.Item>
+            <Dropdown.Item></Dropdown.Item>
+            <Dropdown.Item></Dropdown.Item>
+            <Dropdown.Item></Dropdown.Item>
           </Dropdown>
           <DragDropFile />
         </p>

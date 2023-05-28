@@ -16,6 +16,10 @@
 .mainbody p {
   text-align: center;
 }
+.mainbody > p dropdown-menu {
+  text-align: center;
+  height: 100%;
+}
 .mainbody carousel-container {
   max-width: auto;
 }
