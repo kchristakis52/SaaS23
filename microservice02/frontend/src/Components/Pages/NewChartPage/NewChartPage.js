@@ -11,22 +11,13 @@ const NewChartForm = () => {
         Hello {localStorage["username"]}
         <p>
           <form>
-            <FormLabel>
-              Number of Charts :
-              <input type="text" />
-            </FormLabel>
+            <FormLabel>Number of Charts :</FormLabel>
           </form>
           <form>
-            <FormLabel>
-              Available credits :
-              <input type="text" />
-            </FormLabel>
+            <FormLabel>Available credits :</FormLabel>
           </form>
           <form>
-            <FormLabel>
-              Last Login :
-              <input type="text" />
-            </FormLabel>
+            <FormLabel>Last Login : {localStorage["last_login"]} </FormLabel>
           </form>
         </p>
         <Button
