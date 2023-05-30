@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./table.css";
 import classes from "./MyCharts.module.css";
 import { Button } from "@mui/material";
+import Logo from "../../Logo/Logo";
 
 const PreviousDiagrams = () => {
   const [selectedDiagram, setSelectedDiagram] = useState(null);
@@ -96,8 +97,11 @@ const PreviousDiagrams = () => {
 
   return (
     <div className={classes.mainbody}>
+      <p>
+        <Logo />
+      </p>
       <h2>Previous Diagrams</h2>
-      <table striped bordered>
+      <table>
         <thead>
           <tr>
             <th>ID</th>

@@ -6,8 +6,12 @@ import Button from "@mui/material/Button";
 import HC_sankey from "highcharts/modules/sankey";
 import HC_depwheel from "highcharts/modules/dependency-wheel";
 import HighchartsMore from "highcharts/highcharts-more";
+import HighchartsExporting from "highcharts/modules/exporting";
+import HighchartsExportData from "highcharts/modules/export-data";
 require("highcharts/modules/wordcloud")(Highcharts);
 
+HighchartsExportData(Highcharts);
+HighchartsExporting(Highcharts);
 HighchartsMore(Highcharts);
 HC_sankey(Highcharts);
 HC_depwheel(Highcharts);
