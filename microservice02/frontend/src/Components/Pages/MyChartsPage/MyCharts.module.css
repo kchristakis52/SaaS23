@@ -6,6 +6,8 @@
   background-color: rgb(209, 207, 207);
   bottom: 10px;
   overflow-y: scroll;
+  text-align: center;
+  align-items: center;
 }
 
 .mainbody button {

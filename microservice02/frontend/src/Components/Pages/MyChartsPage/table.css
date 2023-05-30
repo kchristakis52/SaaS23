@@ -2,7 +2,7 @@ table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 700px;
-  text-align: center;
+  align-items: center;
 }
 
 table td,

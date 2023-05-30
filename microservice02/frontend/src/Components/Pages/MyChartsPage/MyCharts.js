@@ -1,9 +1,14 @@
 import React, { useState } from "react";
 import "./table.css";
 import classes from "./MyCharts.module.css";
+import { Button } from "@mui/material";
 
 const PreviousDiagrams = () => {
   const [selectedDiagram, setSelectedDiagram] = useState(null);
+  const [PDF, setPDF] = useState(null);
+  const [PNG, setPNG] = useState(null);
+  const [JPEG, setJPEG] = useState(null);
+  const [SVG, setSVG] = useState(null);
 
   const diagrams = [
     {
@@ -36,9 +41,53 @@ const PreviousDiagrams = () => {
     // Add more diagrams as needed
   ];
 
-  const handleDownload = (diagram, downloadLink) => {
-    setSelectedDiagram(diagram);
-    window.open(downloadLink);
+  const handlePDFDownload = (diagram, downloadLink) => {
+    fetch("/backend/PDF-endpoint")
+      .then((response) => response.json())
+      .then((data) => {
+        setPDF(data.PDF);
+        setSelectedDiagram(diagram);
+        window.open(downloadLink);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  const handlePNGDownload = (diagram, downloadLink) => {
+    fetch("/backend/PNG-endpoint")
+      .then((response) => response.json())
+      .then((data) => {
+        setPNG(data.PNG);
+        setSelectedDiagram(diagram);
+        window.open(downloadLink);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  const handleJPEGDownload = (diagram, downloadLink) => {
+    fetch("/backend/JPEG-endpoint")
+      .then((response) => response.json())
+      .then((data) => {
+        setJPEG(data.JPEG);
+        setSelectedDiagram(diagram);
+        window.open(downloadLink);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+  const handleSVGDownload = (diagram, downloadLink) => {
+    fetch("/backend/SVG-endpoint")
+      .then((response) => response.json())
+      .then((data) => {
+        setSVG(data.SVG);
+        setSelectedDiagram(diagram);
+        window.open(downloadLink);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   };
 
   const handleChartTypeClick = (diagram) => {
@@ -69,34 +118,42 @@ const PreviousDiagrams = () => {
               <td>{diagram.timestamp}</td>
               <td>
                 <div>
-                  <button
+                  <Button
+                    variant="contained"
+                    color="success"
                     onClick={() =>
-                      handleDownload(diagram, diagram.downloadLinks.pdf)
+                      handlePDFDownload(diagram, diagram.downloadLinks.pdf)
                     }
                   >
                     PDF
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
                     onClick={() =>
-                      handleDownload(diagram, diagram.downloadLinks.png)
+                      handlePNGDownload(diagram, diagram.downloadLinks.png)
                     }
                   >
                     PNG
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
                     onClick={() =>
-                      handleDownload(diagram, diagram.downloadLinks.jpeg)
+                      handleJPEGDownload(diagram, diagram.downloadLinks.jpeg)
                     }
                   >
                     JPEG
-                  </button>
-                  <button
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="success"
                     onClick={() =>
-                      handleDownload(diagram, diagram.downloadLinks.svg)
+                      handleSVGDownload(diagram, diagram.downloadLinks.svg)
                     }
                   >
                     SVG
-                  </button>
+                  </Button>
                 </div>
               </td>
             </tr>

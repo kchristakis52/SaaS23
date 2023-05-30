@@ -111,9 +111,6 @@ const CreateChart = () => {
             >
               Line with annotations Diagram
             </Dropdown.Item>
-            <Dropdown.Item></Dropdown.Item>
-            <Dropdown.Item></Dropdown.Item>
-            <Dropdown.Item></Dropdown.Item>
           </Dropdown>
           <DragDropFile />
         </p>
