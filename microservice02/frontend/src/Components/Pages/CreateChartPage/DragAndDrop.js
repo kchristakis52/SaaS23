@@ -1,5 +1,6 @@
 import React from "react";
 import { Button, Snackbar } from "@mui/material";
+import "./DragAndDrop.css";
 
 function DragDropFile() {
   // drag state
@@ -35,13 +36,12 @@ function DragDropFile() {
         body: formData,
       })
         .then((response) => {
-          if (response.ok) {
-            // Handle succesful response from the backend
+          if (response) {
+            // Handle the response from the backend
             console.log(response);
             // Redirect to yourchart page or handle the response accordingly
             window.location.href = "/yourchart";
           } else {
-            // Handle error response from the backend
             setErrorAlertOpen(true);
           }
         })
@@ -66,14 +66,19 @@ function DragDropFile() {
         body: formData,
       })
         .then((response) => {
-          // Handle the response from the backend
-          console.log(response);
-          // Redirect to yourchart page or handle the response accordingly
-          window.location.href = "/yourchart";
+          if (response.ok) {
+            // Handle the response from the backend
+            console.log(response);
+            // Redirect to yourchart page or handle the response accordingly
+            window.location.href = "/yourchart";
+          } else {
+            setErrorAlertOpen(true);
+          }
         })
         .catch((error) => {
           // Handle error
           console.error(error);
+          setErrorAlertOpen(true);
         });
     }
   };
@@ -122,12 +127,6 @@ function DragDropFile() {
             onDrop={handleDrop}
           ></div>
         )}
-        <Snackbar
-          open={errorAlertOpen}
-          autoHideDuration={6000}
-          onClose={handleAlertClose}
-          message="Error occurred while processing the file."
-        />
         <Button
           id="form-Button"
           variant="contained"
@@ -145,6 +144,12 @@ function DragDropFile() {
           Cancel
         </Button>
       </form>
+      <Snackbar
+        open={errorAlertOpen}
+        autoHideDuration={6000}
+        onClose={handleAlertClose}
+        message="Error occurred while processing the file."
+      />
     </div>
   );
 }

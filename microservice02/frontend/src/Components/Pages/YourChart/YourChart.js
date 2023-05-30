@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import classes from "./YourChart.module.css";
 
 function YourChartPage() {
   const [chartImage, setChartImage] = useState(null);
@@ -16,12 +17,8 @@ function YourChartPage() {
   }, []);
 
   return (
-    <div>
-      {chartImage ? (
-        <img src={chartImage} alt="Chart" />
-      ) : (
-        <p>Loading chart image...</p>
-      )}
+    <div className={classes.mainbody}>
+      {chartImage ? <img src={chartImage} alt="Chart" /> : <h3>Your Chart</h3>}
     </div>
   );
 }
