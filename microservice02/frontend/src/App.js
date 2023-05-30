@@ -8,8 +8,8 @@ import Logout from "./Containers/LogoutPage";
 import NewChartForm from "./Components/Pages/NewChartPage/NewChartPage";
 import CreateChart from "./Components/Pages/CreateChartPage/CreateChartPage";
 import BuyCredits from "./Components/Pages/BuyCredits/BuyCredisPage";
-import PieChartGenerator from "./Components/Pages/YourChart/GeneratePieChart";
 import PreviousDiagrams from "./Components/Pages/MyChartsPage/MyCharts";
+import YourChartPage from "./Components/Pages/YourChart/YourChart";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
         <Route path="logout" element={<Logout />} />
         <Route path="newchart" element={<NewChartForm />} />
         <Route path="createchart" element={<CreateChart />} />
-        <Route path="yourchart" element={<PieChartGenerator />} />
+        <Route path="yourchart" element={<YourChartPage />} />
         <Route path="buycredits" element={<BuyCredits />} />
         <Route path="mycharts" element={<PreviousDiagrams />} />
       </Routes>

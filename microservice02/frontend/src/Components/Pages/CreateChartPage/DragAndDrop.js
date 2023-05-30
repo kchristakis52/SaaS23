@@ -1,11 +1,12 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Snackbar } from "@mui/material";
 
 function DragDropFile() {
   // drag state
   const [dragActive, setDragActive] = React.useState(false);
   // ref
   const inputRef = React.useRef(null);
+  const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
 
   // handle drag eventse
   const handleDrag = function (e) {
@@ -25,11 +26,30 @@ function DragDropFile() {
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
       // handleFiles(e.dataTransfer.files);
+      const formData = new FormData();
       console.log(e.dataTransfer.files);
-      let filename = e.dataTransfer.files[0].name;
-      localStorage.getItem("filename", filename);
-      console.log(filename);
-      window.location.href = "/yourchart";
+      formData.append("file", e.dataTransfer.files[0]);
+
+      fetch("/backend/chart-endpoint", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Handle succesful response from the backend
+            console.log(response);
+            // Redirect to yourchart page or handle the response accordingly
+            window.location.href = "/yourchart";
+          } else {
+            // Handle error response from the backend
+            setErrorAlertOpen(true);
+          }
+        })
+        .catch((error) => {
+          // Handle error
+          console.error(error);
+          setErrorAlertOpen(true);
+        });
     }
   };
 
@@ -38,12 +58,33 @@ function DragDropFile() {
     e.preventDefault();
     if (e.target.files && e.target.files[0]) {
       //handleFiles(e.target.files);
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+
+      fetch("/backend/chart-endpoint", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => {
+          // Handle the response from the backend
+          console.log(response);
+          // Redirect to yourchart page or handle the response accordingly
+          window.location.href = "/yourchart";
+        })
+        .catch((error) => {
+          // Handle error
+          console.error(error);
+        });
     }
   };
 
   // triggers the input when the button is clicked
   const onButtonClick = () => {
     inputRef.current.click();
+  };
+
+  const handleAlertClose = () => {
+    setErrorAlertOpen(false);
   };
 
   return (
@@ -81,6 +122,12 @@ function DragDropFile() {
             onDrop={handleDrop}
           ></div>
         )}
+        <Snackbar
+          open={errorAlertOpen}
+          autoHideDuration={6000}
+          onClose={handleAlertClose}
+          message="Error occurred while processing the file."
+        />
         <Button
           id="form-Button"
           variant="contained"
