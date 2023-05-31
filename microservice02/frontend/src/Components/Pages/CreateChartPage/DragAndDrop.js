@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Snackbar } from "@mui/material";
 import "./DragAndDrop.css";
+import UploadIcon from "@mui/icons-material/Upload";
 
 function DragDropFile() {
   // drag state
@@ -36,7 +37,7 @@ function DragDropFile() {
         body: formData,
       })
         .then((response) => {
-          if (response) {
+          if (response.ok) {
             // Handle the response from the backend
             console.log(response);
             // Redirect to yourchart page or handle the response accordingly
@@ -132,6 +133,7 @@ function DragDropFile() {
           variant="contained"
           color="success"
           href="/yourchart"
+          startIcon={<UploadIcon />}
         >
           Upload and create chart
         </Button>
@@ -149,6 +151,7 @@ function DragDropFile() {
         autoHideDuration={6000}
         onClose={handleAlertClose}
         message="Error occurred while processing the file."
+        color="error"
       />
     </div>
   );

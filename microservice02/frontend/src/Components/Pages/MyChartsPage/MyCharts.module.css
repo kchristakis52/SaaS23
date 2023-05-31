@@ -6,9 +6,12 @@
   background-color: rgb(209, 207, 207);
   bottom: 10px;
   overflow-y: scroll;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
 }
 
-.mainbody button {
+.mainbody Button {
   margin-right: 5px;
 }
 .mainbody h3 {
