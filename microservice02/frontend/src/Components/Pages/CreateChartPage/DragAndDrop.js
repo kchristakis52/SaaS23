@@ -9,7 +9,7 @@ function DragDropFile() {
   const inputRef = React.useRef(null);
   const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
 
-  // handle drag eventse
+  // handle drag events
   const handleDrag = function (e) {
     e.preventDefault();
     e.stopPropagation();
