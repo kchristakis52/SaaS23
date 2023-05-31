@@ -1,9 +1,11 @@
 .mainbody {
   position: absolute;
-  top: 100px;
-  bottom: auto;
+  top: 100px; /* Header Height */
   width: 100%;
+  height: 100%;
   background-color: rgb(209, 207, 207);
+  bottom: 10px;
+  overflow-y: scroll;
 }
 
 .mainbody h2 {
@@ -12,10 +14,6 @@
 }
 
 .mainbody p {
-  margin-top: 5px;
-  position: relative;
-  padding: 15px;
-  bottom: 10px;
   text-align: center;
 }
 .mainbody Button {

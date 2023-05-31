@@ -1,24 +1,22 @@
 .mainbody {
   position: absolute;
-  top: 100px;
-  bottom: auto;
+  top: 100px; /* Header Height */
   width: 100%;
+  height: 100%;
   background-color: rgb(209, 207, 207);
 }
 
-.mainbody h2 {
-  padding: 10px;
+.mainbody p {
+  padding: 20px;
   text-align: center;
 }
-
-.mainbody p {
-  margin-top: 5px;
-  position: relative;
-  padding: 15px;
-  bottom: 10px;
+.mainbody form {
+  padding: 2px;
+  margin-bottom: 2px;
   text-align: center;
 }
 .mainbody Button {
-  margin-right: 5px;
+  position: abosolute;
   text-align: center;
+  margin-right: 15px;
 }

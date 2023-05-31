@@ -1,0 +1,16 @@
+.mainbody {
+  position: absolute;
+  top: 100px; /* Header Height */
+  width: 100%;
+  height: 100%;
+  background-color: rgb(209, 207, 207);
+  bottom: 10px;
+  overflow-y: scroll;
+}
+
+.mainbody button {
+  margin-right: 5px;
+}
+.mainbody h3 {
+  text-align: center;
+}

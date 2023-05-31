@@ -1,35 +1,60 @@
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
 
 /* base styles */
 * {
   margin: 0;
-  font-family: "Bebas Neue" , cursive;
+  font-size: 20px;
+  font-family: "Bebas Neue", cursive;
   color: rgb(0, 0, 0);
 }
-.navbar {
-  padding: 20px;
+
+.gheader {
   display: flex;
-  align-items: right;
-  margin-right: 10px;
-  border-bottom: 1px solid #ffffff;
-}
-.navbar h1 {
-  color: #000000;
-  padding: 20px;
-}
-.navbar .links {
-  margin-left: 10px;
-  margin-right: 10px;
-}
-.navbar a {
-  text-decoration: none;
-  padding: 10px;
-  margin-left: 1px;
-  margin-right: 10px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #24292e;
+  color: #fff;
+  padding: 10px 20px;
 }
 
-.content {
-  max-width: 600px;
-  margin:  auto;
-  padding: 20px;
+.logo-list-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  color: #fff;
+  font-size: 20px;
+  font-weight: bold;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.navigation-list {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+}
+
+.navigation-list > li ul {
+  padding-inline-start: 5px;
+}
+
+.navigation-list > li a {
+  margin-right: 10px;
+  color: #cdd9e5 !important;
+  text-decoration: none;
+}
+
+.navigation-list > li:last-child {
+  margin-right: 0;
+}
+
+.navigation-list > li:hover a {
+  color: #fff !important;
+}
+
+.login-container a {
+  margin-left: auto;
+  color: #fdf9e5 !important;
 }
