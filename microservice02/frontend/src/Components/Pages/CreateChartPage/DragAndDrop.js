@@ -30,11 +30,12 @@ function DragDropFile() {
       // handleFiles(e.dataTransfer.files);
       const formData = new FormData();
       console.log(e.dataTransfer.files);
-      formData.append("file", e.dataTransfer.files[0]);
+      formData.append("csv", e.dataTransfer.files[0]);
 
-      fetch("/backend/chart-endpoint", {
+      fetch("http://localhost:3001/parse-csv?chtype=line&user=kwstas", {
         method: "POST",
         body: formData,
+        mode: "no-cors",
       })
         .then((response) => {
           if (response.ok) {
