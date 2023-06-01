@@ -43,7 +43,8 @@ const CreateChart = () => {
   // Handle chart type selection change
   const handleChartTypeChange = (value) => {
     setSelectedChartType(value);
-    localStorage.setItem("selectedChartType", value);
+    let value_for_backend = value.replace(/\s/g, "");
+    localStorage.setItem("selectedChartType", value_for_backend);
     console.log(localStorage["selectedChartType"]);
   };
 
@@ -135,7 +136,7 @@ const CreateChart = () => {
             <Dropdown
               id="chartTypeDropdown"
               className="dropdown-menu"
-              title="Diagrams"
+              title={selectedChartType ? selectedChartType : "Diagrams"}
               style={{
                 margin: "2px",
                 maxheight: "100px",
@@ -145,13 +146,13 @@ const CreateChart = () => {
               <DropdownItem eventKey="pie">Pie Diagram</DropdownItem>
               <Dropdown.Item eventKey="line">Line Diagram</Dropdown.Item>
               <Dropdown.Item eventKey="column">Column Diagram</Dropdown.Item>
-              <Dropdown.Item eventKey="dependency_wheel">
+              <Dropdown.Item eventKey="dependency wheel">
                 Dependency Wheel Diagram
               </Dropdown.Item>
-              <Dropdown.Item eventKey="word_cloud">
+              <Dropdown.Item eventKey="word cloud">
                 Word cloud Diagram
               </Dropdown.Item>
-              <Dropdown.Item eventKey="line_with_annotations">
+              <Dropdown.Item eventKey="line with annotations">
                 Line with annotations Diagram
               </Dropdown.Item>
             </Dropdown>
