@@ -43,7 +43,10 @@ const PreviousDiagrams = () => {
   ];
 
   const handlePDFDownload = (diagram, downloadLink) => {
-    fetch("/backend/PDF-endpoint")
+    fetch("", {
+      method: "GET",
+      mode: "no-cors",
+    })
       .then((response) => response.json())
       .then((data) => {
         setPDF(data.PDF);
@@ -55,7 +58,10 @@ const PreviousDiagrams = () => {
       });
   };
   const handlePNGDownload = (diagram, downloadLink) => {
-    fetch("/backend/PNG-endpoint")
+    fetch("", {
+      method: "GET",
+      mode: "no-cors",
+    })
       .then((response) => response.json())
       .then((data) => {
         setPNG(data.PNG);
@@ -67,7 +73,10 @@ const PreviousDiagrams = () => {
       });
   };
   const handleJPEGDownload = (diagram, downloadLink) => {
-    fetch("/backend/JPEG-endpoint")
+    fetch("", {
+      method: "GET",
+      mode: "no-cors",
+    })
       .then((response) => response.json())
       .then((data) => {
         setJPEG(data.JPEG);
@@ -79,7 +88,10 @@ const PreviousDiagrams = () => {
       });
   };
   const handleSVGDownload = (diagram, downloadLink) => {
-    fetch("/backend/SVG-endpoint")
+    fetch("", {
+      method: "GET",
+      mode: "no-cors",
+    })
       .then((response) => response.json())
       .then((data) => {
         setSVG(data.SVG);

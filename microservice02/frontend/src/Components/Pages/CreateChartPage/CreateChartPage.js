@@ -1,4 +1,4 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import classes from "./CreateChartPage.module.css";
 import LineDiagram from "../../../Assets/images/line_diagram.png";
 import PieDiagram from "../../../Assets/images/pie-diagram.png";
@@ -27,6 +27,24 @@ const CreateChart = () => {
     margin: "auto",
     border: "1px solid #ccc",
     padding: "2px",
+  };
+  const [selectedChartType, setSelectedChartType] = useState(""); // State for selected chart type
+
+  useEffect(() => {
+    // Check if a value is already stored in localStorage
+    const storedChartType = localStorage.getItem("selectedChartType");
+
+    // Set the selected chart type from localStorage, if available
+    if (storedChartType) {
+      setSelectedChartType(storedChartType);
+    }
+  }, []);
+
+  // Handle chart type selection change
+  const handleChartTypeChange = (value) => {
+    setSelectedChartType(value);
+    localStorage.setItem("selectedChartType", value);
+    console.log(localStorage["selectedChartType"]);
   };
 
   return (
@@ -112,6 +130,32 @@ const CreateChart = () => {
               Line with annotations Diagram
             </Dropdown.Item>
           </Dropdown>
+          <p style={{ width: "650px" }}>
+            Choose what chart you want to implement :
+            <Dropdown
+              id="chartTypeDropdown"
+              className="dropdown-menu"
+              title="Diagrams"
+              style={{
+                margin: "2px",
+                maxheight: "100px",
+              }}
+              onSelect={handleChartTypeChange}
+            >
+              <DropdownItem eventKey="pie">Pie Diagram</DropdownItem>
+              <Dropdown.Item eventKey="line">Line Diagram</Dropdown.Item>
+              <Dropdown.Item eventKey="column">Column Diagram</Dropdown.Item>
+              <Dropdown.Item eventKey="dependency_wheel">
+                Dependency Wheel Diagram
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="word_cloud">
+                Word cloud Diagram
+              </Dropdown.Item>
+              <Dropdown.Item eventKey="line_with_annotations">
+                Line with annotations Diagram
+              </Dropdown.Item>
+            </Dropdown>
+          </p>
           <DragDropFile />
         </p>
       </div>

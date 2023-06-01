@@ -9,7 +9,7 @@ export default function Login() {
     console.log("Encoded JWT ID token: " + response.credential);
     let userObject = jwt_decode(response.credential);
     let token = response.credential;
-    let username = userObject.name;
+    let username = userObject.name.replace(/\s/g, "");
     let email = userObject.email;
     let timestamp = userObject.iat; // Extract the "iat" claim for the timestamp
     localStorage.setItem("token", token);
@@ -27,7 +27,7 @@ export default function Login() {
     console.log(formattedDate);
     console.log(formattedTime);
     localStorage.setItem("last_login", formattedDate + " " + formattedTime);
-    window.location.href = "http://localhost:3000/newchart";
+    //window.location.href = "http://localhost:3000/newchart";
   }
 
   useEffect(() => {
