@@ -64,7 +64,7 @@ function DragDropFile() {
       //handleFiles(e.target.files);
       const formData = new FormData();
       formData.append("csv", e.dataTransfer.files[0]);
-      formData.append("user", localStorage["username"]);
+      formData.append("user", localStorage["username_for_backend"]);
       formData.append("chtype", localStorage["selectedChartType"]);
 
       fetch("http://localhost:3001/parse-csv?chtype=line&user=kwstas", {
