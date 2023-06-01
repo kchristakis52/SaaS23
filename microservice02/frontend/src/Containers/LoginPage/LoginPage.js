@@ -10,10 +10,12 @@ export default function Login() {
     let userObject = jwt_decode(response.credential);
     let token = response.credential;
     let username = userObject.name;
+    let username_without_spaces = userObject.name.replace(/\s/g, "");
     let email = userObject.email;
     let timestamp = userObject.iat; // Extract the "iat" claim for the timestamp
     localStorage.setItem("token", token);
     localStorage.setItem("username", username);
+    localStorage.setItem("username_for_backend", username_without_spaces);
     localStorage.setItem("email", email);
     console.log(userObject);
     setUser(userObject);

@@ -31,16 +31,30 @@ function DragDropFile() {
       const formData = new FormData();
       console.log(e.dataTransfer.files);
       formData.append("csv", e.dataTransfer.files[0]);
-
-      fetch("http://localhost:3001/parse-csv?chtype=line&user=kwstas", {
+      formData.append("user", localStorage["username"]);
+      formData.append("chtype", localStorage["selectedChartType"]);
+      const url = `http://localhost:3001/parse-csv?chtype=${encodeURIComponent(
+        localStorage["selectedChartType"]
+      )}&user=${encodeURIComponent(localStorage["username_for_backend"])}`;
+      fetch(url, {
         method: "POST",
         body: formData,
-        mode: "no-cors",
       })
         .then((response) => {
+          console.log(response.status); // Access the response status code
           if (response.ok) {
             // Handle the response from the backend
-            console.log(response);
+            return response.json();
+          } else {
+            setErrorAlertOpen(true);
+          }
+        })
+        .then((data) => {
+          console.log("Response status:", data.status);
+          console.log(data);
+          if (data.status === 200) {
+            // Handle the response from the backend
+            console.log(data);
             // Redirect to yourchart page or handle the response accordingly
             window.location.href = "/yourchart";
           } else {
@@ -61,16 +75,19 @@ function DragDropFile() {
     if (e.target.files && e.target.files[0]) {
       //handleFiles(e.target.files);
       const formData = new FormData();
-      formData.append("file", e.target.files[0]);
+      formData.append("csv", e.dataTransfer.files[0]);
+      formData.append("user", localStorage["username_for_backend"]);
+      formData.append("chtype", localStorage["selectedChartType"]);
 
-      fetch("/backend/chart-endpoint", {
+      fetch("http://localhost:3001/parse-csv?chtype=line&user=kwstas", {
         method: "POST",
         body: formData,
+        mode: "no-cors",
       })
         .then((response) => {
           if (response.ok) {
             // Handle the response from the backend
-            console.log(response);
+            console.log(response.status);
             // Redirect to yourchart page or handle the response accordingly
             window.location.href = "/yourchart";
           } else {
