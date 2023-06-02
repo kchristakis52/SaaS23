@@ -4,6 +4,7 @@ import "./NavigationItems.css";
 
 const NavigationItems = () => {
   let token = false;
+  const username = encodeURIComponent(localStorage.getItem("username"));
   if (localStorage.getItem("token")) token = true;
   return (
     <div>
@@ -14,7 +15,10 @@ const NavigationItems = () => {
           </a>
           <ul className="navigation-list">
             <li>
-              <NavigationItem link="/newchart" auth={!token}>
+              <NavigationItem
+                link={`$/ newchart?username=${username}`}
+                auth={!token}
+              >
                 New Chart
               </NavigationItem>
             </li>

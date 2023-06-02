@@ -9,6 +9,8 @@ function DragDropFile() {
   // ref
   const inputRef = React.useRef(null);
   const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [uploadSuccess, setUploadSuccess] = React.useState(false); // Track upload success
 
   // handle drag events
   const handleDrag = function (e) {
@@ -27,23 +29,47 @@ function DragDropFile() {
     e.stopPropagation();
     setDragActive(false);
     if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      // handleFiles(e.dataTransfer.files);
-      const formData = new FormData();
-      console.log(e.dataTransfer.files);
-      formData.append("csv", e.dataTransfer.files[0]);
-      formData.append("user", localStorage["username"]);
-      formData.append("chtype", localStorage["selectedChartType"]);
+      const file = e.dataTransfer.files[0];
+
+      // Check file extension
+      const fileName = file.name;
+      const fileExtension = fileName.split(".").pop().toLowerCase();
+      if (fileExtension !== "csv") {
+        setErrorMessage("Invalid file format. Please upload a CSV file.");
+        setErrorAlertOpen(true);
+        return;
+      }
+
+      // Check file mime type
+      const fileMimeType = file.type;
+      if (
+        fileMimeType !== "text/csv" &&
+        fileMimeType !== "application/vnd.ms-excel"
+      ) {
+        setErrorMessage("Invalid file format. Please upload a CSV file.");
+        setErrorAlertOpen(true);
+        return;
+      }
       const url = `http://localhost:3001/parse-csv?chtype=${encodeURIComponent(
-        localStorage["selectedChartType"]
-      )}&user=${encodeURIComponent(localStorage["username_for_backend"])}`;
+        localStorage["selectedChartTypeforBackend"]
+      )}&user=${encodeURIComponent(localStorage["username"])}`;
+      const params = new URLSearchParams(window.location.search);
+      const username = params.get("username");
+      const formData = new FormData();
+      formData.append("csv", file);
+      console.log(username);
+      formData.append("user", username);
+      formData.append("chtype", localStorage["selectedChartType"]);
+
       fetch(url, {
         method: "POST",
         body: formData,
       })
         .then((response) => {
-          console.log(response.status); // Access the response status code
+          console.log(response.status);
           if (response.ok) {
-            // Handle the response from the backend
+            console.log(localStorage["username"]);
+            console.log(localStorage["username_for_url"]);
             return response.json();
           } else {
             setErrorAlertOpen(true);
@@ -52,17 +78,15 @@ function DragDropFile() {
         .then((data) => {
           console.log("Response status:", data.status);
           console.log(data);
-          if (data.status === 200) {
+          if (data.status === "success") {
+            setUploadSuccess(true); // Set upload success status
             // Handle the response from the backend
-            console.log(data);
-            // Redirect to yourchart page or handle the response accordingly
-            window.location.href = "/yourchart";
+            console.log(localStorage["username"]);
           } else {
             setErrorAlertOpen(true);
           }
         })
         .catch((error) => {
-          // Handle error
           console.error(error);
           setErrorAlertOpen(true);
         });
@@ -76,7 +100,7 @@ function DragDropFile() {
       //handleFiles(e.target.files);
       const formData = new FormData();
       formData.append("csv", e.dataTransfer.files[0]);
-      formData.append("user", localStorage["username_for_backend"]);
+      formData.append("user", localStorage["username"]);
       formData.append("chtype", localStorage["selectedChartType"]);
 
       fetch("http://localhost:3001/parse-csv?chtype=line&user=kwstas", {
@@ -87,9 +111,9 @@ function DragDropFile() {
         .then((response) => {
           if (response.ok) {
             // Handle the response from the backend
+            setUploadSuccess(true); // Set upload success status
             console.log(response.status);
             // Redirect to yourchart page or handle the response accordingly
-            window.location.href = "/yourchart";
           } else {
             setErrorAlertOpen(true);
           }
@@ -110,6 +134,12 @@ function DragDropFile() {
   const handleAlertClose = () => {
     setErrorAlertOpen(false);
   };
+
+  React.useEffect(() => {
+    if (uploadSuccess) {
+      //window.location.href = "/yourchart";
+    }
+  }, [uploadSuccess]);
 
   return (
     <div>
@@ -150,7 +180,11 @@ function DragDropFile() {
           id="form-Button"
           variant="contained"
           color="success"
-          href="/yourchart"
+          onClick={() =>
+            (window.location.href = `http://localhost:3000/yourchart?username=${encodeURIComponent(
+              localStorage.getItem("username")
+            )}`)
+          }
           startIcon={<UploadIcon />}
         >
           Upload and create chart
@@ -159,17 +193,20 @@ function DragDropFile() {
           id="form-Button"
           variant="contained"
           color="success"
-          href="/newchart"
+          onClick={() =>
+            (window.location.href = `http://localhost:3000/newchart?username=${encodeURIComponent(
+              localStorage.getItem("username")
+            )}`)
+          }
         >
           Cancel
         </Button>
       </form>
       <Snackbar
         open={errorAlertOpen}
-        autoHideDuration={6000}
+        autoHideDuration={5000}
         onClose={handleAlertClose}
-        message="Error occurred while processing the file."
-        color="error"
+        message={errorMessage}
       />
     </div>
   );

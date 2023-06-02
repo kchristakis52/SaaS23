@@ -23,21 +23,33 @@ const NewChartForm = () => {
         <Button
           variant="contained"
           color="success"
-          onClick={() => (window.location.href = "/mycharts")}
+          onClick={() =>
+            (window.location.href = `http://localhost:3000/mycharts?username=${encodeURIComponent(
+              localStorage.getItem("username")
+            )}`)
+          }
         >
           My Charts
         </Button>
         <Button
           variant="contained"
           color="success"
-          onClick={() => (window.location.href = "/createchart")}
+          onClick={() =>
+            (window.location.href = `http://localhost:3000/createchart?username=${encodeURIComponent(
+              localStorage.getItem("username")
+            )}`)
+          }
         >
           New Chart
         </Button>
         <Button
           variant="contained"
           color="success"
-          onClick={() => (window.location.href = "/buycredits")}
+          onClick={() =>
+            (window.location.href = `http://localhost:3000/buycredits?username=${encodeURIComponent(
+              localStorage.getItem("username")
+            )}`)
+          }
         >
           Buy Credits
         </Button>

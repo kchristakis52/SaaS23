@@ -12,6 +12,7 @@ import PreviousDiagrams from "./Components/Pages/MyChartsPage/MyCharts";
 import YourChartPage from "./Components/Pages/YourChart/YourChart";
 
 function App() {
+  const username = encodeURIComponent(localStorage.getItem("username"));
   return (
     <div className="App">
       <Toolbar />
@@ -20,11 +21,31 @@ function App() {
         <Route path="about" element={<About />} />
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
-        <Route path="newchart" element={<NewChartForm />} />
-        <Route path="createchart" element={<CreateChart />} />
-        <Route path="yourchart" element={<YourChartPage />} />
-        <Route path="buycredits" element={<BuyCredits />} />
-        <Route path="mycharts" element={<PreviousDiagrams />} />
+        <Route
+          path="newchart"
+          element={<NewChartForm />}
+          query={{ username: username }}
+        />
+        <Route
+          path="createchart"
+          element={<CreateChart />}
+          query={{ username: username }}
+        />
+        <Route
+          path="yourchart"
+          element={<YourChartPage />}
+          query={{ username: username }}
+        />
+        <Route
+          path="buycredits"
+          element={<BuyCredits />}
+          query={{ username: username }}
+        />
+        <Route
+          path="mycharts"
+          element={<PreviousDiagrams />}
+          query={{ username: username }}
+        />
       </Routes>
       <Footer />
     </div>

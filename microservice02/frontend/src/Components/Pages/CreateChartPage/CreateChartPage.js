@@ -43,8 +43,9 @@ const CreateChart = () => {
   // Handle chart type selection change
   const handleChartTypeChange = (value) => {
     setSelectedChartType(value);
-    let value_for_backend = value.replace(/\s/g, "");
-    localStorage.setItem("selectedChartType", value_for_backend);
+    let value_for_url = value.replace(/\s/g, "");
+    localStorage.setItem("selectedChartType", value_for_url);
+    localStorage.setItem("selectedChartTypeforBackend", value);
     console.log(localStorage["selectedChartType"]);
   };
 

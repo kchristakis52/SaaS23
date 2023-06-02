@@ -24,7 +24,7 @@ app.post("/parse-csv", upload.single("csv"), (req, res) => {
     console.log(chtype);
     let chartname = req.file.originalname;
     chartname = chartname.slice(0, chartname.length - 4);
-    //console.log(chartname)
+    console.log(chartname);
     console.log(req.file.buffer.toString("utf-8"));
     res.status(200).json({
       status: "success",
