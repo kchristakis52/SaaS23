@@ -6,6 +6,10 @@ const fs = require("fs");
 const cors = require("cors");
 
 const app = express();
+
+const { produceToQueue1, produceToQueue2, produceToQueue3, produceToQueue4 } = require('./producer');
+
+
 const upload = multer({ storage: multer.memoryStorage() }); // Destination folder for storing uploaded CSVs
 
 // MongoDB connection
@@ -77,6 +81,33 @@ app.post("/userloggedin", async (req, res) => {
     await client.close();
     //console.log('Disconnected from MongoDB');
   }
+});
+
+app.get('/produce-task1', async (req, res) => {
+  const message = { data: 'Your message to task1_queue' };
+  await produceToQueue1(message);
+  res.send('Message produced to task1_queue');
+});
+
+// Example route to produce a message to task2_queue
+app.get('/produce-task2', async (req, res) => {
+  const message = { data: 'Your message to task2_queue' };
+  await produceToQueue2(message);
+  res.send('Message produced to task2_queue');
+});
+
+// Example route to produce a message to task3_queue
+app.get('/produce-task3', async (req, res) => {
+  const message = { data: 'Your message to task3_queue' };
+  await produceToQueue3(message);
+  res.send('Message produced to task3_queue');
+});
+
+// Example route to produce a message to task4_queue
+app.get('/produce-task4', async (req, res) => {
+  const message = { data: 'Your message to task4_queue' };
+  await produceToQueue4(message);
+  res.send('Message produced to task4_queue');
 });
 
 // Start the server
