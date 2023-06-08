@@ -1,0 +1,27 @@
+{
+  "name": "saas23-20",
+  "version": "1.0.0",
+  "description": "Περιγραφή - οδηγίες",
+  "main": "setup.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://ntua-el16038@github.com/ntua/SaaS23-20.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ntua/SaaS23-20/issues"
+  },
+  "homepage": "https://github.com/ntua/SaaS23-20#readme",
+  "dependencies": {
+    "amqplib": "^0.10.3",
+    "axios": "^1.4.0",
+    "bash": "^0.0.1",
+    "dotenv": "^16.1.0",
+    "path": "^0.12.7"
+  }
+}
