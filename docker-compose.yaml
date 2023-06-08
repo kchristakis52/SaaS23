@@ -32,3 +32,9 @@ services:
       - "3001:3001"
     depends_on:
       - messaging
+  exporterline:
+    build:
+      context: ./exporterline
+      dockerfile: Dockerfile
+    depends_on:
+      - messaging
