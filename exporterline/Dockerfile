@@ -5,7 +5,7 @@ WORKDIR /asap
 
 COPY package.json ./
 
-RUN npm install
+RUN npm install && sh fix-phantomjs.sh
 
 COPY . .
 
