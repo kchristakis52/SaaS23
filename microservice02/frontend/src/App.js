@@ -22,7 +22,7 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="logout" element={<Logout />} />
         <Route
-          path="newchart"
+          path="/newchart"
           element={<NewChartForm />}
           query={{ username: username }}
         />

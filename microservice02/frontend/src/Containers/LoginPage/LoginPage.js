@@ -27,7 +27,7 @@ export default function Login() {
     console.log(formattedDate);
     console.log(formattedTime);
     localStorage.setItem("last_login", formattedDate + " " + formattedTime);
-    window.location.href = `http://localhost:3000/newchart?username=${encodeURIComponent(
+    window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
       username
     )}`;
   }

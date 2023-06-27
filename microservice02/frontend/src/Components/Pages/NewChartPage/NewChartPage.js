@@ -24,7 +24,7 @@ const NewChartForm = () => {
           variant="contained"
           color="success"
           onClick={() =>
-            (window.location.href = `http://localhost:3000/mycharts?username=${encodeURIComponent(
+            (window.location.href = `http://localhost:4007/mycharts?username=${encodeURIComponent(
               localStorage.getItem("username")
             )}`)
           }
@@ -35,7 +35,7 @@ const NewChartForm = () => {
           variant="contained"
           color="success"
           onClick={() =>
-            (window.location.href = `http://localhost:3000/createchart?username=${encodeURIComponent(
+            (window.location.href = `http://localhost:4007/createchart?username=${encodeURIComponent(
               localStorage.getItem("username")
             )}`)
           }
@@ -46,7 +46,7 @@ const NewChartForm = () => {
           variant="contained"
           color="success"
           onClick={() =>
-            (window.location.href = `http://localhost:3000/buycredits?username=${encodeURIComponent(
+            (window.location.href = `http://localhost:4007/buycredits?username=${encodeURIComponent(
               localStorage.getItem("username")
             )}`)
           }

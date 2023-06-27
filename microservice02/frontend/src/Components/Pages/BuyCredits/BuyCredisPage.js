@@ -143,7 +143,11 @@ const BuyCredits = () => {
               style={cancelbuttonstyles}
               variant="contained"
               color="error"
-              onClick={() => (window.location.href = "/newchart")}
+              onClick={() =>
+                (window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
+                  localStorage.getItem("username")
+                )}`)
+              }
             >
               Cancel
             </Button>

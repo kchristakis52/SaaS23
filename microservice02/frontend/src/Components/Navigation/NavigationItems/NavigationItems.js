@@ -16,7 +16,7 @@ const NavigationItems = () => {
           <ul className="navigation-list">
             <li>
               <NavigationItem
-                link={`$/ newchart?username=${username}`}
+                link={`/newchart?username=${username}`}
                 auth={!token}
               >
                 New Chart
