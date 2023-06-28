@@ -65,7 +65,7 @@ for (let i=0; i<lines.length; i++){
     objdata[2]=parseInt(objdata[2])
     chartdata.push(objdata);    
 }
-console.log(chartdata)
+
 const chartDetails = {
     type: "png",
     options: {
@@ -91,7 +91,7 @@ chartExporter.export(chartDetails, (err, res) => {
     let imageb64 = res.data;
 
     // Filename of the output
-    let outputFile = "line.png";
+    let outputFile = "wheel.png";
 
     // Save the image to file
     fs.writeFileSync(outputFile, imageb64, "base64", function (err) {
