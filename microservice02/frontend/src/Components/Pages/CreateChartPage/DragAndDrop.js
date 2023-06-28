@@ -181,7 +181,7 @@ function DragDropFile() {
           variant="contained"
           color="success"
           onClick={() =>
-            (window.location.href = `http://localhost:3000/yourchart?username=${encodeURIComponent(
+            (window.location.href = `http://localhost:4007/yourchart?username=${encodeURIComponent(
               localStorage.getItem("username")
             )}`)
           }
@@ -191,10 +191,11 @@ function DragDropFile() {
         </Button>
         <Button
           id="form-Button"
+          s
           variant="contained"
           color="success"
           onClick={() =>
-            (window.location.href = `http://localhost:3000/newchart?username=${encodeURIComponent(
+            (window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
               localStorage.getItem("username")
             )}`)
           }

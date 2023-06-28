@@ -4,7 +4,7 @@ import LineDiagram from "../../../Assets/images/line_diagram.png";
 import PieDiagram from "../../../Assets/images/pie-diagram.png";
 import ColumnDiagram from "../../../Assets/images/column-diagram.png";
 import DependencyWheelDiagram from "../../../Assets/images/dependency-wheel-diagram.png";
-import LineWithAnnotationsDiagram from "../../../Assets/images/line-with-annotations-diagram.png";
+import PolarDiagram from "../../../Assets/images/polar-diagram.png";
 import WordcloudDiagram from "../../../Assets/images/wordcloud-diagram.png";
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import LineDiagramTemplate from "../../../Assets/templates/line-diagram-template.csv";
@@ -12,7 +12,7 @@ import PieDiagramTemplate from "../../../Assets/templates/pie-diagram-template.c
 import ColumnDiagramTemplate from "../../../Assets/templates/column-diagram-template.csv";
 import DependencyDiagramTemplate from "../../../Assets/templates/dependency-wheel-diagram-template.csv";
 import WordcloudDiagramTemplate from "../../../Assets/templates/wordcloud-diagram-template.csv";
-import LineWithAnnotationsTemplate from "../../../Assets/templates/line-with-annotations-diagram-template.csv";
+import PolarDiagramTemplate from "../../../Assets/templates/polar-diagram-template.csv";
 import { Carousel } from "react-responsive-carousel";
 import "rsuite/dist/rsuite.min.css";
 import FileDownloadIcon from "@rsuite/icons/FileDownload";
@@ -67,7 +67,7 @@ const CreateChart = () => {
             <img src={DependencyWheelDiagram} alt=""></img>
           </div>
           <div>
-            <img src={LineWithAnnotationsDiagram} alt=""></img>
+            <img src={PolarDiagram} alt=""></img>
           </div>
           <div>
             <img src={WordcloudDiagram} alt=""></img>
@@ -117,19 +117,19 @@ const CreateChart = () => {
             </Dropdown.Item>
             <Dropdown.Item
               as="a"
+              href={PolarDiagramTemplate}
+              download="polar-diagram-template.csv"
+              icon={<FileDownloadIcon />}
+            >
+              Polar Diagram
+            </Dropdown.Item>
+            <Dropdown.Item
+              as="a"
               href={WordcloudDiagramTemplate}
               download="wordcloud-diagram-template.csv"
               icon={<FileDownloadIcon />}
             >
               Word cloud Diagram
-            </Dropdown.Item>
-            <Dropdown.Item
-              as="a"
-              href={LineWithAnnotationsTemplate}
-              download="line-with-annotations-diagram-template.csv"
-              icon={<FileDownloadIcon />}
-            >
-              Line with annotations Diagram
             </Dropdown.Item>
           </Dropdown>
           <p style={{ width: "650px" }}>
@@ -150,11 +150,9 @@ const CreateChart = () => {
               <Dropdown.Item eventKey="dependency wheel">
                 Dependency Wheel Diagram
               </Dropdown.Item>
+              <Dropdown.Item eventKey="polar">Polar Diagram</Dropdown.Item>
               <Dropdown.Item eventKey="word cloud">
                 Word cloud Diagram
-              </Dropdown.Item>
-              <Dropdown.Item eventKey="line with annotations">
-                Line with annotations Diagram
               </Dropdown.Item>
             </Dropdown>
           </p>
