@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { v4: uuidv4 } = require('uuid');
 const chartExporter = require("highcharts-export-server");
 const amqp = require("amqplib");
 

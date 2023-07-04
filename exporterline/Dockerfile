@@ -13,4 +13,6 @@ RUN npm install
 
 COPY . .
 
+RUN mkdir -p /app/data
+
 CMD ["node", "index.js"]
