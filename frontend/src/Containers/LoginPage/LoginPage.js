@@ -24,8 +24,8 @@ export default function Login() {
       date.getMonth() + 1
     }/${date.getFullYear()}`;
     const formattedTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    console.log(formattedDate);
-    console.log(formattedTime);
+    //console.log(formattedDate);
+    //console.log(formattedTime);
     localStorage.setItem("last_login", formattedDate + " " + formattedTime);
     window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
       username

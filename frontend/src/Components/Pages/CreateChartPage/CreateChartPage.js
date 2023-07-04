@@ -147,11 +147,11 @@ const CreateChart = () => {
               <DropdownItem eventKey="pie">Pie Diagram</DropdownItem>
               <Dropdown.Item eventKey="line">Line Diagram</Dropdown.Item>
               <Dropdown.Item eventKey="column">Column Diagram</Dropdown.Item>
-              <Dropdown.Item eventKey="dependency wheel">
+              <Dropdown.Item eventKey="dependency-wheel">
                 Dependency Wheel Diagram
               </Dropdown.Item>
               <Dropdown.Item eventKey="polar">Polar Diagram</Dropdown.Item>
-              <Dropdown.Item eventKey="word cloud">
+              <Dropdown.Item eventKey="word-cloud">
                 Word cloud Diagram
               </Dropdown.Item>
             </Dropdown>
