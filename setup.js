@@ -75,8 +75,4 @@ async function waitRabbitMQReady() {
   }
 }
 
-<<<<<<< Updated upstream
 setupRabbitMQ();
-=======
-setupRabbitMQ();
->>>>>>> Stashed changes

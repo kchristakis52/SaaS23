@@ -20,19 +20,25 @@ app.use(express.json());
 // Enable CORS for all routes
 app.use(cors());
 //localhost:3000/parse-csv?chtype=line&user=kwstas
-app.post("/parse-csv", upload.single("csv"), (req, res) => {
+app.post("/parse-csv", upload.single("csv"), async (req, res) => {
   try {
     let user = req.query.user;
     let chtype = req.query.chtype;
-    console.log(user);
-    console.log(chtype);
+    // console.log(user);
+    // console.log(chtype);
     let chartname = req.file.originalname;
     chartname = chartname.slice(0, chartname.length - 4);
-    console.log(chartname);
-    console.log(req.file.buffer.toString("utf-8"));
+    // console.log(chartname);
+    // console.log(req.file.buffer.toString("utf-8"));
+    //To be done: Send to correct queue depening on chtype
+
+    const message = { data: req.file.buffer.toString("utf-8"), filename: chartname, user: user };
+    await produceToQueue1(message);
+    
     res.status(200).json({
       status: "success",
-      [chartname]: req.file.buffer.toString("utf-8"),
+      data: req.file.buffer.toString("utf-8"),
+      filename: chartname
     });
   } catch (err) {
     console.error(err);
