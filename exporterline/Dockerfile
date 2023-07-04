@@ -1,11 +1,15 @@
 #to be aggreed
-FROM node:14
+FROM ubuntu:latest
 
-WORKDIR /asap
+RUN apt-get update && apt-get install -y nodejs npm
+
+ENV OPENSSL_CONF=/dev/null
+
+WORKDIR /asa
 
 COPY package.json ./
 
-RUN npm install && sh fix-phantomjs.sh
+RUN npm install
 
 COPY . .
 
