@@ -1,0 +1,22 @@
+FROM ubuntu:latest
+
+Run apt-get update && apt-get install -y nodejs npm
+
+ENV OPENSSL_CONF=/dev/null
+
+ENV ACCEPT_HIGHCHARTS_LICENSE="YES"
+ENV HIGHCHARTS_VERSION=9.2.2 
+ENV HIGHCHARTS_USE_STYLED="YES"
+ENV HIGHCHARTS_USE_MAPS="YES"
+ENV HIGHCHARTS_USE_GANTT="YES"
+ENV HIGHCHARTS_MOMENT="NO"
+
+WORKDIR /asa
+
+COPY package.json ./
+
+RUN npm install
+
+COPY . .
+
+CMD ["node", "index.js"]

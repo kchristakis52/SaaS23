@@ -1,8 +1,8 @@
-FROM node:15.12.0
+FROM node:14-alpine
 
 WORKDIR /nup
 
-COPY package.json package-lock.json /nup/
+COPY package.json package-lock.json /nup
 RUN npm install --production
 
 COPY setup.js /nup
