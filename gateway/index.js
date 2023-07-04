@@ -7,8 +7,12 @@ const cors = require("cors");
 
 const app = express();
 
-const { produceToQueue1, produceToQueue2, produceToQueue3, produceToQueue4 } = require('./producer');
-
+const {
+  produceToQueue1,
+  produceToQueue2,
+  produceToQueue3,
+  produceToQueue4,
+} = require("./producer");
 
 const upload = multer({ storage: multer.memoryStorage() }); // Destination folder for storing uploaded CSVs
 
@@ -24,7 +28,6 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
   try {
     let user = req.query.user;
     let chtype = req.query.chtype;
-    // console.log(user);
     // console.log(chtype);
     let chartname = req.file.originalname;
     chartname = chartname.slice(0, chartname.length - 4);
@@ -32,13 +35,19 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
     // console.log(req.file.buffer.toString("utf-8"));
     //To be done: Send to correct queue depening on chtype
 
-    const message = { data: req.file.buffer.toString("utf-8"), filename: chartname, user: user };
+    const message = {
+      data: req.file.buffer.toString("utf-8"),
+      filename: chartname,
+      user: user,
+      chtype: chtype,
+    };
     await produceToQueue1(message);
-    
+
     res.status(200).json({
       status: "success",
       data: req.file.buffer.toString("utf-8"),
-      filename: chartname
+      filename: chartname,
+      user: user,
     });
   } catch (err) {
     console.error(err);
@@ -66,7 +75,7 @@ app.post("/userloggedin", async (req, res) => {
     } else {
       // Create a new document
       const user = {
-        email: mail,
+        email: email,
         timestamp: timestamp,
         charts: 0,
         quotas: 10,
@@ -89,31 +98,31 @@ app.post("/userloggedin", async (req, res) => {
   }
 });
 
-app.get('/produce-task1', async (req, res) => {
-  const message = { data: 'Your message to task1_queue' };
+app.get("/produce-task1", async (req, res) => {
+  const message = { data: "Your message to task1_queue" };
   await produceToQueue1(message);
-  res.send('Message produced to task1_queue');
+  res.send("Message produced to task1_queue");
 });
 
 // Example route to produce a message to task2_queue
-app.get('/produce-task2', async (req, res) => {
-  const message = { data: 'Your message to task2_queue' };
+app.get("/produce-task2", async (req, res) => {
+  const message = { data: "Your message to task2_queue" };
   await produceToQueue2(message);
-  res.send('Message produced to task2_queue');
+  res.send("Message produced to task2_queue");
 });
 
 // Example route to produce a message to task3_queue
-app.get('/produce-task3', async (req, res) => {
-  const message = { data: 'Your message to task3_queue' };
+app.get("/produce-task3", async (req, res) => {
+  const message = { data: "Your message to task3_queue" };
   await produceToQueue3(message);
-  res.send('Message produced to task3_queue');
+  res.send("Message produced to task3_queue");
 });
 
 // Example route to produce a message to task4_queue
-app.get('/produce-task4', async (req, res) => {
-  const message = { data: 'Your message to task4_queue' };
+app.get("/produce-task4", async (req, res) => {
+  const message = { data: "Your message to task4_queue" };
   await produceToQueue4(message);
-  res.send('Message produced to task4_queue');
+  res.send("Message produced to task4_queue");
 });
 
 // Start the server
