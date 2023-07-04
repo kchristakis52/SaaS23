@@ -40,7 +40,9 @@ services:
       - messaging
     command: sh -c "sleep 18 && npm start"
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     ports:
       - "4007:4007"
     volumes:
