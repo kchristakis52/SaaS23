@@ -47,12 +47,12 @@ services:
   #    - shared-volume:/app/data
   frontend:
     build:
-      context: ./microservice02/frontend
+      context: ./frontend
       dockerfile: Dockerfile
     ports:
       - "4007:3000"
     volumes:
-      - ./microservice02/frontend/src:/app/src
+      - ./frontend/src:/app/src
     stdin_open: true
     tty: true
     depends_on:

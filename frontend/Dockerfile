@@ -1,8 +1,8 @@
-FROM node:15.12.0
+FROM node:16
 
-WORKDIR /app
+WORKDIR /napp
 
-COPY package*.json .
+COPY package.json .
 
 RUN npm install
 
@@ -10,5 +10,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "node", "." ]
-
+CMD [ "npm", "start" ]
