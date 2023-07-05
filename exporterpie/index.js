@@ -1,5 +1,7 @@
 const fs = require("fs");
 const chartExporter = require("highcharts-export-server");
+const amqp = require("amqplib");
+const { v4: uuidv4 } = require("uuid");
 // Initialize the exporter
 chartExporter.initPool();
 // Chart details object specifies chart type and data to plot
