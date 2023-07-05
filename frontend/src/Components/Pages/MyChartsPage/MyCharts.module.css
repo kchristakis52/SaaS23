@@ -1,0 +1,18 @@
+.mainbody {
+  position: absolute;
+  top: 100px; /* Header Height */
+  width: 100%;
+  height: 200%;
+  background-color: rgb(209, 207, 207);
+  bottom: 10px;
+  text-align: center;
+  align-items: center;
+  justify-content: center;
+}
+
+.mainbody Button {
+  margin-right: 5px;
+}
+.mainbody h3 {
+  text-align: center;
+}

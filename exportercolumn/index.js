@@ -1,63 +1,113 @@
 const fs = require("fs");
 const chartExporter = require("highcharts-export-server");
+const amqp = require("amqplib");
+const { v4: uuidv4 } = require("uuid");
 // Initialize the exporter
 chartExporter.initPool();
 // Chart details object specifies chart type and data to plot
 
-const csvdata = `Titlos
-Subtitlos
-"Category";"Tokyo";"New York";"London";"Berlin"
-"Jan";49,9;83,6;48,9;42,4
-"Feb";71,5;78,8;38,8;33,2
-"Mar";106,4;98,5;39,3;34,5
-"Apr";129,2;93,4;41,4;39,7
-"May";144;106;47;52,6
-"Jun";176;84,5;48,3;75,5
-"Jul";135,6;105;59;57,4
-"Aug";148,5;104,3;59,6;60,4
-"Sep";216,4;91,2;52,4;47,6
-"Oct";194,1;83,5;65,2;39,1
-"Nov";95,6;106,6;59,3;46,8
-"Dec";54,4;92,3;51,2;51,1`
+async function consumeFromQueue(queueName) {
+    try {
+        const connection = await amqp.connect("amqp://guest:guest@messaging:5672/");
+        const channel = await connection.createChannel();
 
-const lines = csvdata.split(/\r?\n/);
-const title = lines[0];
-const subtitle = lines[1];
+        await channel.assertQueue(queueName, { durable: true });
 
-lines.splice(0, 2);
-const chartdata = lines.join('\n');
-const chartDetails = {
-    type: "png",
-    options: {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: title
-        },
-        
-        subtitle: {
-            text: subtitle
-        },
-        data: {
-            csv: chartdata,
+        console.log(`Waiting for messages in queue '${queueName}'...`);
 
-        },
+        channel.consume(queueName, async (message) => {
+            if (message !== null) {
+                const messageContent = message.content.toString();
+                console.log(
+                    `Received message from queue '${queueName}': ${messageContent}`
+                );
+
+                const jsonobj = JSON.parse(messageContent);
+                const email = jsonobj.user;
+                console.log(email);
+                // Process the received message and generate the chart image
+
+
+                const lines = jsonobj.data.split(/\r?\n/);
+                console.log(lines);
+                const title = lines[0];
+                const subtitle = lines[1];
+
+                lines.splice(0, 2);
+                const chartdata = lines.join('\n');
+                const chartDetails = {
+                    type: "png",
+                    options: {
+                        chart: {
+                            type: 'column'
+                        },
+                        title: {
+                            text: title
+                        },
+
+                        subtitle: {
+                            text: subtitle
+                        },
+                        data: {
+                            csv: chartdata,
+
+                        },
+                    }
+                };
+                const outputFile = "column.png";
+                exportChartToImage(
+                    chartDetails,
+                    outputFile,
+                    channel,
+                    connection,
+                    message
+                );
+            }
+        });
+    } catch (error) {
+        console.log(error);
     }
-};
+}
 
-chartExporter.export(chartDetails, (err, res) => {
-    // Get the image data (base64)
-    let imageb64 = res.data;
+async function exportChartToImage(
+    chartDetails,
+    outputFile,
+    channel,
+    connection,
+    message
+) {
+    try {
+        chartExporter.export(chartDetails, (err, res) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
 
-    // Filename of the output
-    let outputFile = "column.png";
+            // Get the image data (base64)
+            const imageb64 = res.data;
 
-    // Save the image to file
-    fs.writeFileSync(outputFile, imageb64, "base64", function (err) {
-        if (err) console.log(err);
-    });
+            const uniqueIdentifier = uuidv4();
 
-    console.log("Saved image!");
-    chartExporter.killPool();
-});
+            const fileName = `Sample_${uniqueIdentifier}.png`;
+
+            // Save the image to file
+            fs.writeFileSync(`./${fileName}`, imageb64, "base64", (err) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                console.log(`Chart image saved to ${outputFile}`);
+                channel.ack(message); // Acknowledge the message to remove it from the queue
+                chartExporter.killPool();
+                channel.close();
+                connection.close();
+            });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Example usage: Consume messages from a queue named "task1_queue"
+consumeFromQueue("task4_queue");
