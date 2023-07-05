@@ -46,7 +46,7 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
       chtype: chtype,
     };
     
-    await produceToQueue2(message);
+    await produceToQueue4(message);
 
     res.status(200).json({
       status: "success",

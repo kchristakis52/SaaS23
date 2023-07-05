@@ -1,55 +1,109 @@
 const fs = require("fs");
 const chartExporter = require("highcharts-export-server");
+const amqp = require("amqplib");
+const { v4: uuidv4 } = require("uuid");
 // Initialize the exporter
 chartExporter.initPool();
 // Chart details object specifies chart type and data to plot
+async function consumeFromQueue(queueName) {
+    try {
+        const connection = await amqp.connect("amqp://guest:guest@messaging:5672/");
+        const channel = await connection.createChannel();
 
-const csvdata = `Titlos
-"Category","Column","Line","Area"
-0,8,1,1
-45,7,2,8
-90,6,3,2
-135,5,4,7
-180,4,5,3
-225,3,6,6
-270,2,7,4
-315,1,8,5`
+        await channel.assertQueue(queueName, { durable: true });
 
-const lines = csvdata.split(/\r?\n/);
-const title = lines[0];
+        console.log(`Waiting for messages in queue '${queueName}'...`);
+
+        channel.consume(queueName, async (message) => {
+            if (message !== null) {
+                const messageContent = message.content.toString();
+                console.log(
+                    `Received message from queue '${queueName}': ${messageContent}`
+                );
+
+                const jsonobj = JSON.parse(messageContent);
+                const email = jsonobj.user;
+                console.log(email);
+                // Process the received message and generate the chart image
 
 
-lines.splice(0, 1);
-const chartdata = lines.join('\n');
-const chartDetails = {
-    type: "png",
-    options: {
-        chart: {
-            polar: true
-        },
-        title: {
-            text: title
-        },
-        
-        data: {
-            csv: chartdata,
+                const lines = jsonobj.data.split(/\r?\n/);
+                console.log(lines);
+                const title = lines[0];
 
-        },
+
+                lines.splice(0, 1);
+                const chartdata = lines.join('\n');
+                const chartDetails = {
+                    type: "png",
+                    options: {
+                        chart: {
+                            polar: true
+                        },
+                        title: {
+                            text: title
+                        },
+
+                        data: {
+                            csv: chartdata,
+
+                        },
+                    }
+                };
+                const outputFile = "line.png";
+                exportChartToImage(
+                    chartDetails,
+                    outputFile,
+                    channel,
+                    connection,
+                    message
+                );
+            }
+        });
+    } catch (error) {
+        console.log(error);
     }
-};
+}
 
-chartExporter.export(chartDetails, (err, res) => {
-    // Get the image data (base64)
-    let imageb64 = res.data;
+async function exportChartToImage(
+    chartDetails,
+    outputFile,
+    channel,
+    connection,
+    message
+) {
+    try {
+        chartExporter.export(chartDetails, (err, res) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
 
-    // Filename of the output
-    let outputFile = "radar.png";
+            // Get the image data (base64)
+            const imageb64 = res.data;
 
-    // Save the image to file
-    fs.writeFileSync(outputFile, imageb64, "base64", function (err) {
-        if (err) console.log(err);
-    });
+            const uniqueIdentifier = uuidv4();
 
-    console.log("Saved image!");
-    chartExporter.killPool();
-});
+            const fileName = `Sample_${uniqueIdentifier}.png`;
+
+            // Save the image to file
+            fs.writeFileSync(`./${fileName}`, imageb64, "base64", (err) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                console.log(`Chart image saved to ${outputFile}`);
+                channel.ack(message); // Acknowledge the message to remove it from the queue
+                chartExporter.killPool();
+                channel.close();
+                connection.close();
+            });
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+// Example usage: Consume messages from a queue named "task1_queue"
+consumeFromQueue("task3_queue");
