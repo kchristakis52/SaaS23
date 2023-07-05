@@ -50,9 +50,9 @@ services:
       context: ./microservice02/frontend
       dockerfile: Dockerfile
     ports:
-      - "4007:4007"
+      - "4007:3000"
     volumes:
-      - ./microservice02/frontend:/app
+      - ./microservice02/frontend/src:/app/src
     stdin_open: true
     tty: true
     depends_on:
