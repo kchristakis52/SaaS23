@@ -36,14 +36,26 @@ services:
       - messaging
     volumes:
       - shared-volume:/app/data
-  exporterline:
+  #exporterline:
+  #  build:
+  #    context: ./exporterline
+  #    dockerfile: Dockerfile
+  #  depends_on:
+  #    - messaging
+  #  command: sh -c "sleep 18 && npm start"
+  #  volumes:
+  #    - shared-volume:/app/data
+  frontend:
     build:
-      context: ./exporterline
+      context: ./microservice02/frontend
       dockerfile: Dockerfile
-    depends_on:
-      - messaging
-    command: sh -c "sleep 18 && npm start"
+    ports:
+      - "4007:4007"
     volumes:
-      - shared-volume:/app/data
-  volumes:
-    shared-volume:
+      - ./microservice02/frontend:/app
+    stdin_open: true
+    tty: true
+    depends_on:
+      - gateway
+volumes:
+  shared-volume:
