@@ -1,103 +1,119 @@
-const { timeLog } = require("console");
 const fs = require("fs");
 const chartExporter = require("highcharts-export-server");
+const amqp = require("amqplib");
+const { v4: uuidv4 } = require("uuid");
 // Initialize the exporter
 chartExporter.initPool();
 // Chart details object specifies chart type and data to plot
 
-const csvdata = `Titlos
-"Brazil";"Portugal";5
-"Brazil";"France";1
-"Brazil";"Spain";1
-"Brazil";"England";1
-"Canada";"Portugal";1
-"Canada";"France";5
-"Canada";"England";1
-"Mexico";"Portugal";1
-"Mexico";"France";1
-"Mexico";"Spain";5
-"Mexico";"England";1
-"USA";"Portugal";1
-"USA";"France";1
-"USA";"Spain";1
-"USA";"England";5
-"Portugal";"Angola";2
-"Portugal";"Senegal";1
-"Portugal";"Morocco";1
-"Portugal";"South Africa";3
-"France";"Angola";1
-"France";"Senegal";3
-"France";"Mali";3
-"France";"Morocco";3
-"France";"South Africa";1
-"Spain";"Senegal";1
-"Spain";"Morocco";3
-"Spain";"South Africa";1
-"England";"Angola";1
-"England";"Senegal";1
-"England";"Morocco";2
-"England";"South Africa";7
-"South Africa";"China";5
-"South Africa";"India";1
-"South Africa";"Japan";3
-"Angola";"China";5
-"Angola";"India";1
-"Angola";"Japan";3
-"Senegal";"China";5
-"Senegal";"India";1
-"Senegal";"Japan";3
-"Mali";"China";5
-"Mali";"India";1
-"Mali";"Japan";3
-"Morocco";"China";5
-"Morocco";"India";1
-"Morocco";"Japan";3
-"Japan";"Brazil";1`
+async function consumeFromQueue(queueName) {
+  try {
+    const connection = await amqp.connect("amqp://guest:guest@messaging:5672/");
+    const channel = await connection.createChannel();
 
-const lines = csvdata.split(/\r?\n/);
-const title = lines[0];
+    await channel.assertQueue(queueName, { durable: true });
 
-lines.splice(0, 1);
-const chartdata=[];
+    console.log(`Waiting for messages in queue '${queueName}'...`);
 
-for (let i=0; i<lines.length; i++){
-    const objdata = lines[i].split(";");
-    objdata[2]=parseInt(objdata[2])
-    chartdata.push(objdata);    
+    channel.consume(queueName, async (message) => {
+      if (message !== null) {
+        const messageContent = message.content.toString();
+        console.log(
+          `Received message from queue '${queueName}': ${messageContent}`
+        );
+
+        const jsonobj = JSON.parse(messageContent);
+        const email = jsonobj.user;
+        console.log(email);
+        // Process the received message and generate the chart image
+
+
+        const lines = jsonobj.data.split(/\r?\n/);
+        console.log(lines);
+        const title = lines[0];
+
+        lines.splice(0, 1);
+        const chartdata = [];
+
+        for (let i = 0; i < lines.length; i++) {
+          const objdata = lines[i].split(";");
+          objdata[2] = parseInt(objdata[2])
+          chartdata.push(objdata);
+        }
+
+        const chartDetails = {
+          type: "png",
+          options: {
+            chart: {
+              type: 'dependencywheel'
+            },
+            title: {
+              text: title
+            },
+            series: [{
+              keys: ['from', 'to', 'weight'],
+              data: chartdata
+            }]
+
+
+
+
+          }
+        };
+        const outputFile = "column.png";
+        exportChartToImage(
+          chartDetails,
+          outputFile,
+          channel,
+          connection,
+          message
+        );
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-const chartDetails = {
-    type: "png",
-    options: {
-        chart: {
-            type: 'dependencywheel'
-          },
-          title: {
-            text: 'Dependency Graph'
-          },
-          series: [{
-            keys: ['from', 'to', 'weight'],
-            data: chartdata
-          }]
-        
-        
+async function exportChartToImage(
+  chartDetails,
+  outputFile,
+  channel,
+  connection,
+  message
+) {
+  try {
+    chartExporter.export(chartDetails, (err, res) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
 
-       
-    }
-};
+      // Get the image data (base64)
+      const imageb64 = res.data;
 
-chartExporter.export(chartDetails, (err, res) => {
-    // Get the image data (base64)
-    let imageb64 = res.data;
+      const uniqueIdentifier = uuidv4();
 
-    // Filename of the output
-    let outputFile = "wheel.png";
+      const fileName = `Sample_${uniqueIdentifier}.png`;
 
-    // Save the image to file
-    fs.writeFileSync(outputFile, imageb64, "base64", function (err) {
-        if (err) console.log(err);
+      // Save the image to file
+      fs.writeFileSync(`./${fileName}`, imageb64, "base64", (err) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+
+        console.log(`Chart image saved to ${outputFile}`);
+        channel.ack(message); // Acknowledge the message to remove it from the queue
+        chartExporter.killPool();
+        channel.close();
+        connection.close();
+      });
     });
+  } catch (error) {
+    console.log(error);
+  }
+}
 
-    console.log("Saved image!");
-    chartExporter.killPool();
-});
+// Example usage: Consume messages from a queue named "task1_queue"
+consumeFromQueue("wheelq");

@@ -110,4 +110,4 @@ async function exportChartToImage(
 }
 
 // Example usage: Consume messages from a queue named "task1_queue"
-consumeFromQueue("task4_queue");
+consumeFromQueue("columnq");

@@ -121,4 +121,4 @@ async function exportChartToImage(
 }
 
 // Example usage: Consume messages from a queue named "task1_queue"
-consumeFromQueue("task1_queue");
+consumeFromQueue("lineq");

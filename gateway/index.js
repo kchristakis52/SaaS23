@@ -8,10 +8,7 @@ const cors = require("cors");
 const app = express();
 
 const {
-  produceToQueue1,
-  produceToQueue2,
-  produceToQueue3,
-  produceToQueue4,
+  produceToQueue  
 } = require("./producer");
 
 const upload = multer({ storage: multer.memoryStorage() }); // Destination folder for storing uploaded CSVs
@@ -46,7 +43,7 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
       chtype: chtype,
     };
     
-    await produceToQueue4(message);
+    await produceToQueue(message, chtype);
 
     res.status(200).json({
       status: "success",
