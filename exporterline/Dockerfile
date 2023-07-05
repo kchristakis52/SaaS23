@@ -1,7 +1,6 @@
-#to be aggreed
-FROM node:15.12.0
+FROM ubuntu:latest
 
-
+Run apt-get update && apt-get install -y nodejs npm
 
 ENV OPENSSL_CONF=/dev/null
 

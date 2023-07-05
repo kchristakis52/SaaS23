@@ -52,12 +52,14 @@ function DragDropFile() {
       }
       const url = `http://localhost:3001/parse-csv?chtype=${encodeURIComponent(
         localStorage["selectedChartTypeforBackend"]
-      )}&user=${encodeURIComponent(localStorage["username"])}`;
+      )}&user=${encodeURIComponent(localStorage["email"])}`;
       const params = new URLSearchParams(window.location.search);
       const username = params.get("username");
+      const email = params.get("email");
       const formData = new FormData();
       formData.append("csv", file);
       console.log(username);
+      formData.append("email", email);
       formData.append("user", username);
       formData.append("chtype", localStorage["selectedChartType"]);
 
@@ -68,8 +70,6 @@ function DragDropFile() {
         .then((response) => {
           console.log(response.status);
           if (response.ok) {
-            console.log(localStorage["username"]);
-            console.log(localStorage["username_for_url"]);
             return response.json();
           } else {
             setErrorAlertOpen(true);
@@ -137,7 +137,9 @@ function DragDropFile() {
 
   React.useEffect(() => {
     if (uploadSuccess) {
-      //window.location.href = "/yourchart";
+      //window.location.href = `http://localhost:4007/yourchart?username=${encodeURIComponent(
+      //localStorage.getItem("username")
+      //)}`;
     }
   }, [uploadSuccess]);
 

@@ -1,4 +1,5 @@
 const fs = require("fs");
+const { v4: uuidv4 } = require("uuid");
 const chartExporter = require("highcharts-export-server");
 const amqp = require("amqplib");
 
@@ -17,53 +18,61 @@ async function consumeFromQueue(queueName) {
     channel.consume(queueName, async (message) => {
       if (message !== null) {
         const messageContent = message.content.toString();
-        console.log(`Received message from queue '${queueName}': ${messageContent}`);
-        
+        console.log(
+          `Received message from queue '${queueName}': ${messageContent}`
+        );
+
         const jsonobj = JSON.parse(messageContent);
         const email = jsonobj.user;
         console.log(email);
         // Process the received message and generate the chart image
         const lines = jsonobj.data.split(/\r?\n/);
-        console.log(lines)
+        console.log(lines);
         const title = lines[0];
         const subtitle = lines[1];
         const xAxis = lines[2];
         const yAxis = lines[3];
         lines.splice(0, 4);
-        const chartdata = lines.join('\n');
+        const chartdata = lines.join("\n");
         const chartDetails = {
           type: "png",
           options: {
             chart: {
-              type: "line"
+              type: "line",
             },
             legend: {
-              enabled: true
+              enabled: true,
             },
             title: {
-              text: title
+              text: title,
             },
             subtitle: {
-              text: subtitle
+              text: subtitle,
             },
             yAxis: {
               title: {
-                text: yAxis
-              }
+                text: yAxis,
+              },
             },
             xAxis: {
               title: {
-                text: xAxis
-              }
+                text: xAxis,
+              },
             },
             data: {
-              csv: chartdata
-            }
-          }
+              csv: chartdata,
+            },
+          },
         };
 
         const outputFile = "line.png";
-        exportChartToImage(chartDetails, outputFile, channel, connection, message);
+        exportChartToImage(
+          chartDetails,
+          outputFile,
+          channel,
+          connection,
+          message
+        );
       }
     });
   } catch (error) {
@@ -71,7 +80,13 @@ async function consumeFromQueue(queueName) {
   }
 }
 
-async function exportChartToImage(chartDetails, outputFile, channel, connection, message) {
+async function exportChartToImage(
+  chartDetails,
+  outputFile,
+  channel,
+  connection,
+  message
+) {
   try {
     chartExporter.export(chartDetails, (err, res) => {
       if (err) {
@@ -82,8 +97,12 @@ async function exportChartToImage(chartDetails, outputFile, channel, connection,
       // Get the image data (base64)
       const imageb64 = res.data;
 
+      const uniqueIdentifier = uuidv4();
+
+      const fileName = `Sample_${uniqueIdentifier}.png`;
+
       // Save the image to file
-      fs.writeFileSync(outputFile, imageb64, "base64", (err) => {
+      fs.writeFileSync(`/app/data/${fileName}`, imageb64, "base64", (err) => {
         if (err) {
           console.log(err);
           return;
