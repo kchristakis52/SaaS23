@@ -102,7 +102,7 @@ async function exportChartToImage(
       const fileName = `Sample_${uniqueIdentifier}.png`;
 
       // Save the image to file
-      fs.writeFileSync(`/app/data/${fileName}`, imageb64, "base64", (err) => {
+      fs.writeFileSync(`./shared-data/${fileName}`, imageb64, "base64", (err) => {
         if (err) {
           console.log(err);
           return;

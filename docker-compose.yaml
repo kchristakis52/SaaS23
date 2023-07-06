@@ -2,6 +2,11 @@ version: "3.8"
 services:
   messaging:
     build: ./messaging
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 30s
+      retries: 3
     ports:
       - "5672:5672"
       - "15672:15672"
@@ -21,7 +26,8 @@ services:
       args:
         - RABBITMQ_ENV_FILE=./env/rabbitmq.env
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
     command: >
       sh -c "sleep 9 && node setup.js"
   mysql:
@@ -39,14 +45,20 @@ services:
       dockerfile: Dockerfile
     ports:
       - "3001:3001"
+    volumes:
+      - mydata:/shared-data  
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
   exporterline:
     build:
       context: ./exporterline
       dockerfile: Dockerfile
+    volumes:
+      - mydata:/shared-data  
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
     command: sh -c "sleep 18 && npm start"
   # frontend:
   #   build:
@@ -64,35 +76,52 @@ services:
     build:
       context: ./exporterpie
       dockerfile: Dockerfile
+    volumes:
+      - mydata:/shared-data  
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
     command: sh -c "sleep 18 && npm start"
   exporterradar:
     build:
       context: ./exporterradar
       dockerfile: Dockerfile
+    volumes:
+      - mydata:/shared-data  
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
     command: sh -c "sleep 18 && npm start"
   exportercolumn:
     build:
       context: ./exportercolumn
       dockerfile: Dockerfile
+    volumes:
+      - mydata:/shared-data  
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
     command: sh -c "sleep 18 && npm start"
   exporterdependencywheel:
     build:
       context: ./exporterdependencywheel
       dockerfile: Dockerfile
+    volumes:
+      - mydata:/shared-data
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
     command: sh -c "sleep 18 && npm start"
   exporterwordcloud:
     build:
       context: ./exporterwordcloud
       dockerfile: Dockerfile
+    volumes:
+      - mydata:/shared-data  
     depends_on:
-      - messaging
+      messaging:
+        condition: service_healthy
     command: sh -c "sleep 18 && npm start"
 
+volumes:
+  mydata:

@@ -7,7 +7,7 @@ async function connectToQueue() {
     const connection = await amqp.connect("amqp://guest:guest@messaging:5672/");
     const channel = await connection.createChannel();
 
-    const exchangeName = "task_exchange";
+    const exchangeName = "exchangeDirect";
     await channel.assertExchange(exchangeName, "direct", { durable: true });
 
     const queues = ["columnq", "lineq", "radarq", "pieq", "wheelq", "wordq"];

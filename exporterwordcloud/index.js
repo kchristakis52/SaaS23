@@ -2,6 +2,7 @@ const fs = require("fs");
 const chartExporter = require("highcharts-export-server");
 const amqp = require("amqplib");
 const { v4: uuidv4 } = require("uuid");
+const mysql = require('mysql');
 // Initialize the exporter
 chartExporter.initPool();
 // Chart details object specifies chart type and data to plot
@@ -69,10 +70,10 @@ async function consumeFromQueue(queueName) {
                     }
                 };
 
-                const outputFile = "column.png";
+                //const outputFile = "column.png";
                 exportChartToImage(
                     chartDetails,
-                    outputFile,
+                    email,
                     channel,
                     connection,
                     message
@@ -84,42 +85,53 @@ async function consumeFromQueue(queueName) {
     }
 }
 
-async function exportChartToImage(
-    chartDetails,
-    outputFile,
-    channel,
-    connection,
-    message
-) {
+async function exportChartToImage(chartDetails, email, channel, connection, message) {
     try {
+        const uniqueIdentifier = uuidv4();
+        const fileName = `Sample_${uniqueIdentifier}.png`;
+        const filePath = `../shared-data/${fileName}`;
         chartExporter.export(chartDetails, (err, res) => {
             if (err) {
                 console.log(err);
                 return;
             }
-
             // Get the image data (base64)
             const imageb64 = res.data;
-
-            const uniqueIdentifier = uuidv4();
-
-            const fileName = `Sample_${uniqueIdentifier}.png`;
-
             // Save the image to file
-            fs.writeFileSync(`./${fileName}`, imageb64, "base64", (err) => {
+            fs.writeFileSync(filePath, imageb64, "base64", (err) => {
                 if (err) {
                     console.log(err);
                     return;
                 }
-
-                console.log(`Chart image saved to ${outputFile}`);
-                channel.ack(message); // Acknowledge the message to remove it from the queue
-                chartExporter.killPool();
-                channel.close();
-                connection.close();
             });
+
+            console.log(`Chart image saved to ${filePath}`);
+            channel.ack(message); // Acknowledge the message to remove it from the queue
+            chartExporter.killPool();
+            // channel.close();
+            // connection.close();
         });
-    } catch (error) {
+        const pool = mysql.createPool({
+            host: 'mysql',
+            user: 'root',
+            password: 'password',
+            database: 'SaaSDB'
+        });
+
+        const sql = 'INSERT INTO Diagrams (diagram_type, filepath, email) VALUES (?, ?, ?)';
+        const values = ["wordcloud", filePath, email];
+
+        pool.query(sql, values, (err, result) => {
+            if (err) {
+                console.log('Error inserting diagram: ' + err.stack);
+
+            }
+            else {
+                console.log("Saved Image")
+            }
+        });
+    }
+    catch (error) {
         console.log(error);
     }
 }

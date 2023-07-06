@@ -138,6 +138,23 @@ app.post("/userpay", async (req, res) => {
 
 });
 
+app.get('/getdiagrams', (req, res) => {
+  const userEmail = req.query.mail;
+
+  const query = 'SELECT * FROM Diagrams WHERE email = ?';
+  const values = [userEmail];
+
+  pool.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Error retrieving diagrams: ' + err.stack);
+      res.status(500).send('Error retrieving diagrams');
+      return;
+    }
+
+    res.status(200).json(results);
+  });
+});
+
 
 
 
