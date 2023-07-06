@@ -173,18 +173,15 @@ app.get('/getuserinfo', (req, res) => {
 
 app.get('/getimage', (req, res) => {
   const imageName = req.query.filename;
+
   const chtype = req.query.chtype;
-  const imagePath = `../${chtype}-shared-data/${imageName}`;
+  const imagePath = `../${chtype}-shared-data/${imageName}.png`;
   fs.readFile(imagePath, (err, data) => {
     if (err) {
       console.error(err);
       return res.status(500).send('Internal Server Error');
     }
-
-
     res.contentType('image/png');
-
-
     res.send(data);
   });
 });
