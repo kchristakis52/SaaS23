@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { React, useState, useEffect } from "react";
 import "./table.css";
 import classes from "./MyCharts.module.css";
 import { Button } from "@mui/material";
@@ -10,37 +10,41 @@ const PreviousDiagrams = () => {
   const [PNG, setPNG] = useState(null);
   const [JPEG, setJPEG] = useState(null);
   const [SVG, setSVG] = useState(null);
+  const [diagramData, setDiagramData] = useState(null);
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  useEffect(() => {
+    const url2 = `http://localhost:3001/getdiagrams?mail=${encodeURIComponent(
+      localStorage["email"]
+    )}`;
 
-  const diagrams = [
-    {
-      id: 1,
-      chartType: "Pie",
-      image:
-        "https://www.tibco.com/sites/tibco/files/media_entity/2022-01/PieChart-01.svg",
-      timestamp: "2023-05-26 10:30 AM",
-      downloadLinks: {
-        pdf: "https://example.com/diagram1.pdf",
-        png: "https://axis-india.com/wp-content/uploads/2022/06/Single-Line-Diagram.jpeg",
-        jpeg: "https://example.com/diagram1.jpeg",
-        svg: "https://example.com/diagram1.svg",
-      },
-    },
-    {
-      id: 2,
-      chartType: "Line",
-
-      image:
-        "https://etap.com/images/default-source/product/one-line-diagram/etap-intelligent-one-line-diagram.jpg?sfvrsn=60c7bf7f_30",
-      timestamp: "2023-05-25 02:45 PM",
-      downloadLinks: {
-        pdf: "https://example.com/diagram2.pdf",
-        png: "https://example.com/line-chart.png",
-        jpeg: "https://example.com/diagram2.jpeg",
-        svg: "https://example.com/diagram2.svg",
-      },
-    },
-    // Add more diagrams as needed
-  ];
+    fetch(url2, {
+      method: "GET",
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Error: " + response.status);
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        setDiagramData(data);
+        if (data) {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
+          console.log(data);
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorAlertOpen(true);
+      });
+  }, []);
 
   const handlePDFDownload = (diagram, downloadLink) => {
     fetch("", {
@@ -58,21 +62,39 @@ const PreviousDiagrams = () => {
       });
   };
   const handlePNGDownload = (diagram, downloadLink) => {
-    fetch("", {
+    const url = `http://localhost:3001/getimage?chtype=${encodeURIComponent(
+      diagramTypeMap
+    )}&filename=${encodeURIComponent(Filepath)}`;
+
+    fetch(url, {
       method: "GET",
-      mode: "no-cors",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Error: " + response.status);
+        }
+      })
       .then((data) => {
-        setPNG(data.PNG);
-        setSelectedDiagram(diagram);
-        window.open(downloadLink);
+        console.log(data);
+        setDiagramData(data);
+        if (data) {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
+          console.log(data);
+        } else {
+          setErrorAlertOpen(true);
+        }
       })
       .catch((error) => {
         console.error(error);
+        setErrorAlertOpen(true);
       });
   };
-  const handleJPEGDownload = (diagram, downloadLink) => {
+
+  const handleHTMLDownload = (diagram, downloadLink) => {
     fetch("", {
       method: "GET",
       mode: "no-cors",
@@ -87,6 +109,7 @@ const PreviousDiagrams = () => {
         console.error(error);
       });
   };
+
   const handleSVGDownload = (diagram, downloadLink) => {
     fetch("", {
       method: "GET",
@@ -118,62 +141,61 @@ const PreviousDiagrams = () => {
           <tr>
             <th>ID</th>
             <th>Chart Type</th>
-            <th>Timestamp</th>
+            <th>Diagram Name</th>
+            <th>Created on</th>
+            <th>Filepath</th>
             <th>Download</th>
           </tr>
         </thead>
         <tbody>
-          {diagrams.map((diagram) => (
-            <tr key={diagram.id}>
-              <td>{diagram.id}</td>
-              <td>
-                <button onClick={() => handleChartTypeClick(diagram)}>
-                  {diagram.chartType}
-                </button>
-              </td>
-              <td>{diagram.timestamp}</td>
-              <td>
-                <div>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() =>
-                      handlePDFDownload(diagram, diagram.downloadLinks.pdf)
-                    }
-                  >
-                    PDF
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() =>
-                      handlePNGDownload(diagram, diagram.downloadLinks.png)
-                    }
-                  >
-                    PNG
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() =>
-                      handleJPEGDownload(diagram, diagram.downloadLinks.jpeg)
-                    }
-                  >
-                    JPEG
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="success"
-                    onClick={() =>
-                      handleSVGDownload(diagram, diagram.downloadLinks.svg)
-                    }
-                  >
-                    SVG
-                  </Button>
-                </div>
-              </td>
-            </tr>
-          ))}
+          {diagramData &&
+            diagramData.map((diagram) => (
+              <tr key={diagram.diagram_id}>
+                <td>{diagram.diagram_id}</td>
+                <td>
+                  <button onClick={() => handleChartTypeClick(diagram)}>
+                    {diagram.diagram_type}
+                  </button>
+                </td>
+                <td>{diagram.diagram_name}</td>
+                <td>{diagram.diagram_creation}</td>
+                <td>
+                  <a href={diagram.filepath}></a>
+                </td>
+                <td>
+                  <div>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handlePDFDownload()}
+                    >
+                      PDF
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handlePNGDownload()}
+                    >
+                      PNG
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleHTMLDownload()}
+                    >
+                      HTML
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleSVGDownload()}
+                    >
+                      SVG
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
@@ -181,7 +203,7 @@ const PreviousDiagrams = () => {
         <div>
           <h3>Preview</h3>
           <div style={{ textAlign: "center" }}>
-            <img src={selectedDiagram.image} alt="Diagram Preview" />
+            <img src={selectedDiagram.filepath} alt="Diagram Preview" />
           </div>
         </div>
       )}
