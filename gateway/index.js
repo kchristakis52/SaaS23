@@ -154,6 +154,23 @@ app.get('/getdiagrams', (req, res) => {
   });
 });
 
+app.get('/getuserinfo', (req, res) => {
+  const userEmail = req.query.mail;
+
+  const query = 'SELECT * FROM Users WHERE email = ?';
+  const values = [userEmail];
+
+  pool.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Error retrieving user stats: ' + err.stack);
+      res.status(500).send('Error retrieving user stats');
+      return;
+    }
+
+    res.status(200).json(results);
+  });
+});
+
 
 
 
