@@ -62,40 +62,36 @@ const PreviousDiagrams = () => {
       });
   };
   const handlePNGDownload = (diagram, downloadLink) => {
-    if (diagram) {
-      const diagramType = diagram.diagram_type;
-      const filename = localStorage["filename"].replace(".csv", "");
-      const url = `http://localhost:3001/getimage?chtype=${encodeURIComponent(
-        diagramType
-      )}&filename=${encodeURIComponent(filename)}`;
+    const url = `http://localhost:3001/getimage?chtype=${encodeURIComponent(
+      diagramTypeMap
+    )}&filename=${encodeURIComponent(Filepath)}`;
 
-      fetch(url, {
-        method: "GET",
+    fetch(url, {
+      method: "GET",
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Error: " + response.status);
+        }
       })
-        .then((response) => {
-          console.log(response.status);
-          if (response.ok) {
-            return response.json();
-          } else {
-            throw new Error("Error: " + response.status);
-          }
-        })
-        .then((data) => {
+      .then((data) => {
+        console.log(data);
+        setDiagramData(data);
+        if (data) {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
           console.log(data);
-          setDiagramData(data);
-          if (data) {
-            setUploadSuccess(true); // Set upload success status
-            // Handle the response from the backend
-            console.log(data);
-          } else {
-            setErrorAlertOpen(true);
-          }
-        })
-        .catch((error) => {
-          console.error(error);
+        } else {
           setErrorAlertOpen(true);
-        });
-    }
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorAlertOpen(true);
+      });
   };
 
   const handleHTMLDownload = (diagram, downloadLink) => {
@@ -144,8 +140,10 @@ const PreviousDiagrams = () => {
         <thead>
           <tr>
             <th>ID</th>
-            <th>Chart Name</th>
+            <th>Chart Type</th>
+            <th>Diagram Name</th>
             <th>Created on</th>
+            <th>Filepath</th>
             <th>Download</th>
           </tr>
         </thead>
@@ -159,7 +157,11 @@ const PreviousDiagrams = () => {
                     {diagram.diagram_type}
                   </button>
                 </td>
-                <td>{diagram.created_on}</td>
+                <td>{diagram.diagram_name}</td>
+                <td>{diagram.diagram_creation}</td>
+                <td>
+                  <a href={diagram.filepath}></a>
+                </td>
                 <td>
                   <div>
                     <Button
