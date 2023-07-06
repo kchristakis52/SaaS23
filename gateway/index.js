@@ -157,7 +157,13 @@ app.get('/getdiagrams', (req, res) => {
 app.get('/getuserinfo', (req, res) => {
   const userEmail = req.query.mail;
 
-  const query = 'SELECT * FROM Users WHERE email = ?';
+  const query = `
+    SELECT Users.*, COUNT(Diagrams.diagram_id) AS diagram_count
+    FROM Users
+    LEFT JOIN Diagrams ON Users.email = Diagrams.email
+    WHERE Users.email = ?
+    GROUP BY Users.email
+  `;
   const values = [userEmail];
 
   pool.query(query, values, (err, results) => {
@@ -166,8 +172,20 @@ app.get('/getuserinfo', (req, res) => {
       res.status(500).send('Error retrieving user stats');
       return;
     }
+    if (results.length === 0) {
+      res.status(404).send('User not found');
+      return;
+    }
+    const user = results[0];
+    const userInfo = {
+      email: user.email,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      last_login: user.last_login,
+      diagram_count: user.diagram_count,
+    };
 
-    res.status(200).json(results);
+    res.status(200).json(userInfo);
   });
 });
 

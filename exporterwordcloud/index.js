@@ -26,13 +26,13 @@ async function consumeFromQueue(queueName) {
 
                 const jsonobj = JSON.parse(messageContent);
                 const email = jsonobj.user;
-                console.log(email);
+                
                 const diagram_name = jsonobj.chartname;
                 // Process the received message and generate the chart image
 
 
                 const lines = jsonobj.data.split(/\r?\n/);
-                console.log(lines);
+                
                 const title = lines[0];
                 const subtitle = lines[1];
 
