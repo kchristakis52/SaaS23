@@ -4,6 +4,8 @@ const mysql = require('mysql');
 const csv = require("csv-parser");
 const fs = require("fs");
 const cors = require("cors");
+const PDFDocument = require('pdfkit');
+
 
 const app = express();
 
@@ -171,37 +173,85 @@ app.get('/getuserinfo', (req, res) => {
   });
 });
 
+app.get('/getimage', (req, res) => {
+  const imageName = req.query.filename;
+  const chtype = req.query.chtype;
+  const imagePath = `../${chtype}-shared-data/${imageName}.png`;
+  fs.readFile(imagePath, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+    res.contentType('image/png');
+    res.send(data);
+  });
+});
 
+app.get('/imagetohtml', (req, res) => {
+  const imageName = req.query.filename;
+  const chtype = req.query.chtype;
+  const imagePath = `../${chtype}-shared-data/${imageName}.png`;
 
+  // Read the PNG file asynchronously
+  fs.readFile(imagePath, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
 
+    // Convert the PNG data to a Base64 encoded string
+    const base64Image = data.toString('base64');
 
+    // Generate the HTML string with an <img> tag referencing the Base64 image
+    const html = `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <title>Image to HTML</title>
+        </head>
+        <body>
+          <img src="data:image/png;base64,${base64Image}" alt="Converted Image">
+        </body>
+      </html>
+    `;
 
-// app.get("/produce-task1", async (req, res) => {
-//   const message = { data: "Your message to task1_queue" };
-//   await produceToQueue1(message);
-//   res.send("Message produced to task1_queue");
-// });
+    // Set the appropriate content type
+    res.contentType('text/html');
 
-// // Example route to produce a message to task2_queue
-// app.get("/produce-task2", async (req, res) => {
-//   const message = { data: "Your message to task2_queue" };
-//   await produceToQueue2(message);
-//   res.send("Message produced to task2_queue");
-// });
+    // Send the HTML as the response
+    res.send(html);
+  });
+});
 
-// // Example route to produce a message to task3_queue
-// app.get("/produce-task3", async (req, res) => {
-//   const message = { data: "Your message to task3_queue" };
-//   await produceToQueue3(message);
-//   res.send("Message produced to task3_queue");
-// });
+app.get('/imagetopdf', (req, res) => {
+  const imageName = req.query.filename;
+  const chtype = req.query.chtype;
+  const imagePath = `../${chtype}-shared-data/${imageName}.png`;
 
-// // Example route to produce a message to task4_queue
-// app.get("/produce-task4", async (req, res) => {
-//   const message = { data: "Your message to task4_queue" };
-//   await produceToQueue4(message);
-//   res.send("Message produced to task4_queue");
-// });
+  // Create a new PDF document
+  const doc = new PDFDocument();
+
+  // Set the appropriate content type
+  res.contentType('application/pdf');
+
+  // Pipe the PDF document to the response
+  doc.pipe(res);
+
+  // Read the PNG file asynchronously
+  fs.readFile(imagePath, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Embed the PNG image into the PDF document
+    doc.image(data);
+
+    // Finalize the PDF document
+    doc.end();
+  });
+});
+
 
 // Start the server
 const port = 3001;

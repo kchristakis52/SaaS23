@@ -80,8 +80,8 @@ async function consumeFromQueue(queueName) {
 async function exportChartToImage(chartDetails, email, channel, connection, message) {
     try {
         const uniqueIdentifier = uuidv4();
-        const fileName = `Sample_${uniqueIdentifier}.png`;
-        const filePath = `../shared-data/${fileName}`;
+        const fileName = `Sample_${uniqueIdentifier}`;
+        const filePath = `../shared-data/${fileName}.png`;
         chartExporter.export(chartDetails, (err, res) => {
             if (err) {
                 console.log(err);
@@ -111,7 +111,7 @@ async function exportChartToImage(chartDetails, email, channel, connection, mess
         });
 
         const sql = 'INSERT INTO Diagrams (diagram_type, filepath, email) VALUES (?, ?, ?)';
-        const values = ["wordcloud", filePath, email];
+        const values = ["wordcloud", fileName, email];
 
         pool.query(sql, values, (err, result) => {
             if (err) {
