@@ -38,9 +38,6 @@ export default function Login() {
     )}&first_name=${encodeURIComponent(
       localStorage["first_name"]
     )}&last_name=${encodeURIComponent(localStorage["last_name"])}`;
-    const url2 = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
-      localStorage["email"]
-    )}`;
     fetch(url1, {
       method: "POST",
     })
@@ -59,38 +56,9 @@ export default function Login() {
           setUploadSuccess(true); // Set upload success status
           // Handle the response from the backend
           console.log(localStorage["username"]);
-          //window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
-          //username
-          //          )}`;
-        } else {
-          setErrorAlertOpen(true);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setErrorAlertOpen(true);
-      });
-    fetch(url2, {
-      method: "GET",
-    })
-      .then((response) => {
-        console.log(response.status);
-        if (response.ok) {
-          return response.json();
-        } else {
-          setErrorAlertOpen(true);
-        }
-      })
-      .then((data) => {
-        console.log("Response status:", data.status);
-        console.log(data);
-        if (data.status === "success") {
-          setUploadSuccess(true); // Set upload success status
-          // Handle the response from the backend
-          console.log(localStorage["username"]);
-          //window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
-          //username
-          //          )}`;
+          window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
+            username
+          )}`;
         } else {
           setErrorAlertOpen(true);
         }

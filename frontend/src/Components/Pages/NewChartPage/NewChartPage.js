@@ -1,9 +1,42 @@
-import React from "react";
+import { React, useEffect, useState } from "react";
 import classes from "./NewChartPage.module.css";
 import Logo from "../../Logo/Logo";
 import { Button, FormLabel } from "@mui/material";
 
 const NewChartForm = () => {
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  useEffect(() => {
+    const url2 = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
+      localStorage["email"]
+    )}`;
+
+    fetch(url2, {
+      method: "GET",
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Error: " + response.status);
+        }
+      })
+      .then((data) => {
+        console.log(data);
+        if (data.status === "success") {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
+          console.log(data);
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorAlertOpen(true);
+      });
+  }, []);
   return (
     <p className={classes.mainbody}>
       <p>
@@ -23,11 +56,30 @@ const NewChartForm = () => {
         <Button
           variant="contained"
           color="success"
-          onClick={() =>
-            (window.location.href = `http://localhost:4007/mycharts?username=${encodeURIComponent(
-              localStorage.getItem("username")
-            )}`)
-          }
+          onClick={() => {
+            const url = `http://localhost:4007/getdiagrams?mail=${encodeURIComponent(
+              localStorage.getItem("email")
+            )}`;
+
+            fetch(url, {
+              method: "GET",
+            })
+              .then((response) => {
+                if (response.ok) {
+                  // Handle the successful response
+                  // For example, you can redirect to the new page
+                  window.location.href = `http://localhost:4007/mycharts?username=${encodeURIComponent(
+                    localStorage.getItem("username")
+                  )}`;
+                } else {
+                  // Handle the error response
+                  console.error("Error:", response.status);
+                }
+              })
+              .catch((error) => {
+                console.error("Error:", error);
+              });
+          }}
         >
           My Charts
         </Button>
