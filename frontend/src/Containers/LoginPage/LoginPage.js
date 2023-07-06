@@ -52,7 +52,7 @@ export default function Login() {
       .then((data) => {
         console.log("Response status:", data.status);
         console.log(data);
-        if (data.status === "success") {
+        if (data) {
           setUploadSuccess(true); // Set upload success status
           // Handle the response from the backend
           console.log(localStorage["username"]);

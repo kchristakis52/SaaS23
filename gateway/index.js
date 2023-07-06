@@ -1,25 +1,22 @@
 const express = require("express");
 const multer = require("multer");
-const mysql = require('mysql');
+const mysql = require("mysql");
 const fs = require("fs");
 const cors = require("cors");
-const PDFDocument = require('pdfkit');
-
+const PDFDocument = require("pdfkit");
 
 const app = express();
 
-const {
-  produceToQueue
-} = require("./producer");
+const { produceToQueue } = require("./producer");
 
 const upload = multer({ storage: multer.memoryStorage() }); // Destination folder for storing uploaded CSVs
 
 // MySQL Connection
 const pool = mysql.createPool({
-  host: 'mysql',
-  user: 'root',
-  password: 'password',
-  database: 'SaaSDB'
+  host: "mysql",
+  user: "root",
+  password: "password",
+  database: "SaaSDB",
 });
 
 app.use(express.json());
@@ -40,7 +37,7 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
     const message = {
       data: req.file.buffer.toString("utf-8"),
       chartname: chartname,
-      user: user
+      user: user,
     };
 
     await produceToQueue(message, chtype);
@@ -59,59 +56,61 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
 
 // API route to handle user login
 app.post("/userloggedin", async (req, res) => {
-
   let email = req.query.mail;
   let first_name = req.query.first_name;
   let last_name = req.query.last_name;
   let last_login = req.query.last_login;
 
-
   // Check if the user already exists in the database
-  const query = 'SELECT * FROM Users WHERE email = ?';
+  const query = "SELECT * FROM Users WHERE email = ?";
   pool.query(query, [email], (error, results) => {
     if (error) {
-      console.error('Error executing MySQL query:', error);
-      return res.status(500).json({ error: 'Error retrieving user from database' });
+      console.error("Error executing MySQL query:", error);
+      return res
+        .status(500)
+        .json({ error: "Error retrieving user from database" });
     }
 
     if (results.length === 0) {
       // User doesn't exist, add them to the database
-      const insertQuery = 'INSERT INTO Users VALUES (?, ?, ?, ?, ?)';
-      pool.query(insertQuery, [email, first_name, last_name, last_login, 10], (insertError) => {
-        if (insertError) {
-          console.error('Error executing MySQL query:', insertError);
-          return res.status(500).json({ error: 'Error adding user to database' });
-        }
+      const insertQuery = "INSERT INTO Users VALUES (?, ?, ?, ?, ?)";
+      pool.query(
+        insertQuery,
+        [email, first_name, last_name, last_login, 10],
+        (insertError) => {
+          if (insertError) {
+            console.error("Error executing MySQL query:", insertError);
+            return res
+              .status(500)
+              .json({ error: "Error adding user to database" });
+          }
 
-        // User added successfully
-        return res.json({ message: 'User added successfully' });
-      });
+          // User added successfully
+          return res.json({ message: "User added successfully" });
+        }
+      );
     } else {
       pool.query(
-        'UPDATE Users SET last_login = ? WHERE email = ?',
+        "UPDATE Users SET last_login = ? WHERE email = ?",
         [last_login, email],
         (updateError, updateResults) => {
           if (updateError) {
-            console.error('Error updating the user:', updateError);
+            console.error("Error updating the user:", updateError);
             res.status(500).json({ error: "Failed to upload User" });
           } else {
             res.status(200).json({ message: "User updated successfully" });
           }
         }
       );
-
     }
   });
-
-
 });
 
-
-app.get('/users', (req, res) => {
-  pool.query('SELECT * FROM Users', (error, results) => {
+app.get("/users", (req, res) => {
+  pool.query("SELECT * FROM Users", (error, results) => {
     if (error) {
-      console.error('Error executing the query:', error);
-      res.status(500).json({ error: 'Error executing the query' });
+      console.error("Error executing the query:", error);
+      res.status(500).json({ error: "Error executing the query" });
     } else {
       res.json(results);
     }
@@ -119,16 +118,15 @@ app.get('/users', (req, res) => {
 });
 //localhost:3001/userpay?mail=kxrist@&amount=10
 app.post("/userpay", async (req, res) => {
-
   let email = req.query.mail;
   let amount = req.query.amount;
 
   pool.query(
-    'UPDATE Users SET diagram_Limit = diagram_Limit + ? WHERE email = ?',
+    "UPDATE Users SET diagram_Limit = diagram_Limit + ? WHERE email = ?",
     [amount, email],
     (updateError, updateResults) => {
       if (updateError) {
-        console.error('Error updating the user:', updateError);
+        console.error("Error updating the user:", updateError);
         res.status(500).json({ error: "Failed to upload User" });
       } else {
         res.status(200).json({ message: "User updated successfully" });
@@ -137,16 +135,16 @@ app.post("/userpay", async (req, res) => {
   );
 });
 
-app.get('/getdiagrams', (req, res) => {
+app.get("/getdiagrams", (req, res) => {
   const userEmail = req.query.mail;
 
-  const query = 'SELECT * FROM Diagrams WHERE email = ?';
+  const query = "SELECT * FROM Diagrams WHERE email = ?";
   const values = [userEmail];
 
   pool.query(query, values, (err, results) => {
     if (err) {
-      console.error('Error retrieving diagrams: ' + err.stack);
-      res.status(500).send('Error retrieving diagrams');
+      console.error("Error retrieving diagrams: " + err.stack);
+      res.status(500).send("Error retrieving diagrams");
       return;
     }
 
@@ -154,7 +152,7 @@ app.get('/getdiagrams', (req, res) => {
   });
 });
 
-app.get('/getuserinfo', (req, res) => {
+app.get("/getuserinfo", (req, res) => {
   const userEmail = req.query.mail;
 
   const query = `
@@ -162,18 +160,17 @@ app.get('/getuserinfo', (req, res) => {
     FROM Users
     LEFT JOIN Diagrams ON Users.email = Diagrams.email
     WHERE Users.email = ?
-    GROUP BY Users.email
   `;
   const values = [userEmail];
 
   pool.query(query, values, (err, results) => {
     if (err) {
-      console.error('Error retrieving user stats: ' + err.stack);
-      res.status(500).send('Error retrieving user stats');
+      console.error("Error retrieving user stats: " + err.stack);
+      res.status(500).send("Error retrieving user stats");
       return;
     }
     if (results.length === 0) {
-      res.status(404).send('User not found');
+      res.status(404).send("User not found");
       return;
     }
     const user = results[0];
@@ -185,45 +182,44 @@ app.get('/getuserinfo', (req, res) => {
       diagram_count: user.diagram_count,
       diagram_Limit: user.diagram_Limit,
     };
-
     res.status(200).json(userInfo);
   });
 });
 
-app.get('/getimage', (req, res) => {
+app.get("/getimage", (req, res) => {
   const imageName = req.query.filename;
   const chtype = req.query.chtype;
   const imagePath = `../${chtype}-shared-data/${imageName}.png`;
   fs.readFile(imagePath, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send("Internal Server Error");
     }
-    res.contentType('image/png');
+    res.contentType("image/png");
     res.send(data);
   });
 });
 
-app.get('/downloadimage', (req, res) => {
+app.get("/downloadimage", (req, res) => {
   const imageName = req.query.filename;
   const chtype = req.query.chtype;
   const imagePath = `../${chtype}-shared-data/${imageName}.png`;
   fs.readFile(imagePath, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send("Internal Server Error");
     }
 
     // Set the appropriate headers for file download
-    res.setHeader('Content-Disposition', 'attachment; filename="image.png"');
-    res.setHeader('Content-Type', 'image/png');
+    res.setHeader("Content-Disposition", 'attachment; filename="image.png"');
+    res.setHeader("Content-Type", "image/png");
 
     // Send the image file as the response
     res.send(data);
   });
 });
 
-app.get('/imagetohtml', (req, res) => {
+app.get("/imagetohtml", (req, res) => {
   const imageName = req.query.filename;
   const chtype = req.query.chtype;
   const imagePath = `../${chtype}-shared-data/${imageName}.png`;
@@ -232,11 +228,11 @@ app.get('/imagetohtml', (req, res) => {
   fs.readFile(imagePath, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send("Internal Server Error");
     }
 
     // Convert the PNG data to a Base64 encoded string
-    const base64Image = data.toString('base64');
+    const base64Image = data.toString("base64");
 
     // Generate the HTML string with an <img> tag referencing the Base64 image
     const html = `
@@ -252,15 +248,18 @@ app.get('/imagetohtml', (req, res) => {
     `;
 
     // Set the appropriate headers for file download
-    res.setHeader('Content-Disposition', 'attachment; filename="converted_image.html"');
-    res.setHeader('Content-Type', 'text/html');
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="converted_image.html"'
+    );
+    res.setHeader("Content-Type", "text/html");
 
     // Send the HTML file as the response
     res.send(html);
   });
 });
 
-app.get('/imagetopdf', (req, res) => {
+app.get("/imagetopdf", (req, res) => {
   const imageName = req.query.filename;
   const chtype = req.query.chtype;
   const imagePath = `../${chtype}-shared-data/${imageName}.png`;
@@ -269,15 +268,18 @@ app.get('/imagetopdf', (req, res) => {
   fs.readFile(imagePath, (err, data) => {
     if (err) {
       console.error(err);
-      return res.status(500).send('Internal Server Error');
+      return res.status(500).send("Internal Server Error");
     }
 
     // Create a new PDF document
     const doc = new PDFDocument();
 
     // Set the appropriate headers for file download
-    res.setHeader('Content-Disposition', 'attachment; filename="converted_image.pdf"');
-    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="converted_image.pdf"'
+    );
+    res.setHeader("Content-Type", "application/pdf");
 
     // Pipe the PDF document to the response
     doc.pipe(res);
@@ -289,7 +291,6 @@ app.get('/imagetopdf', (req, res) => {
     doc.end();
   });
 });
-
 
 // Start the server
 const port = 3001;

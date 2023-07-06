@@ -1,12 +1,15 @@
 import { React, useEffect, useState } from "react";
 import classes from "./NewChartPage.module.css";
 import Logo from "../../Logo/Logo";
-import { Button, FormLabel } from "@mui/material";
+import { Button, FormLabel, Snackbar } from "@mui/material";
 
 const NewChartForm = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
-  const [userData, setuserData] = useState(null);
+  const [credits, setCredits] = useState(null);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [numberOfChartrs, setNumberofCharts] = useState(null);
+
   useEffect(() => {
     const url = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
       localStorage["email"]
@@ -17,7 +20,9 @@ const NewChartForm = () => {
     })
       .then((response) => {
         console.log(response.status);
+        console.log(response);
         if (response.ok) {
+          console.log(response);
           return response.json();
         } else {
           throw new Error("Error: " + response.status);
@@ -28,8 +33,13 @@ const NewChartForm = () => {
         if (data) {
           setUploadSuccess(true); // Set upload success status
           // Handle the response from the backend
-          setuserData(data);
+          setCredits(data.diagram_Limit);
+          setNumberofCharts(data.diagram_count);
           console.log(data);
+          if (data.diagram_Limit <= data.diagram_count) {
+            setErrorMessage("Not enough credits !");
+            setErrorAlertOpen(true);
+          }
         } else {
           setErrorAlertOpen(true);
         }
@@ -39,6 +49,9 @@ const NewChartForm = () => {
         setErrorAlertOpen(true);
       });
   }, []);
+  const handleAlertClose = () => {
+    setErrorAlertOpen(false);
+  };
   return (
     <p className={classes.mainbody}>
       <p>
@@ -46,14 +59,11 @@ const NewChartForm = () => {
         Hello {localStorage["username"]}
         <p>
           <form>
-            <FormLabel>Number of Charts :</FormLabel>
+            <FormLabel>Number of Charts : {numberOfChartrs} </FormLabel>
           </form>
-          {userData &&
-            userData.map((user) => (
-              <form key={user.id}>
-                <FormLabel>Available credits: {user.diagram_Limit}</FormLabel>
-              </form>
-            ))}
+          <form>
+            <FormLabel>Credits : {credits}</FormLabel>
+          </form>
           <form>
             <FormLabel>Last Login : {localStorage["last_login"]} </FormLabel>
           </form>
@@ -111,6 +121,12 @@ const NewChartForm = () => {
           Buy Credits
         </Button>
       </p>
+      <Snackbar
+        open={errorAlertOpen}
+        autoHideDuration={5000}
+        onClose={handleAlertClose}
+        message={errorMessage}
+      />
     </p>
   );
 };
