@@ -50,7 +50,7 @@ function DragDropFile() {
         setErrorAlertOpen(true);
         return;
       }
-      const url = `http://gateway:3001/parse-csv?chtype=${encodeURIComponent(
+      const url = `http://localhost:3001/parse-csv?chtype=${encodeURIComponent(
         localStorage["selectedChartTypeforBackend"]
       )}&user=${encodeURIComponent(localStorage["email"])}`;
       const params = new URLSearchParams(window.location.search);
@@ -104,7 +104,7 @@ function DragDropFile() {
       formData.append("user", localStorage["username"]);
       formData.append("chtype", localStorage["selectedChartType"]);
 
-      fetch("http://gateway:3001/parse-csv?chtype=pieq&user=kwstas", {
+      fetch("http://localhost:3001/parse-csv?chtype=pieq&user=kwstas", {
         method: "POST",
         body: formData,
         mode: "no-cors",
