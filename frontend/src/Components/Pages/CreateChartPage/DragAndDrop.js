@@ -66,6 +66,7 @@ function DragDropFile() {
       fetch(url, {
         method: "POST",
         body: formData,
+        mode: "no-cors",
       })
         .then((response) => {
           console.log(response.status);
@@ -103,7 +104,7 @@ function DragDropFile() {
       formData.append("user", localStorage["username"]);
       formData.append("chtype", localStorage["selectedChartType"]);
 
-      fetch("http://localhost:3001/parse-csv?chtype=line&user=kwstas", {
+      fetch("http://gateway:3001/parse-csv?chtype=pieq&user=kwstas", {
         method: "POST",
         body: formData,
         mode: "no-cors",

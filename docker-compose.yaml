@@ -19,8 +19,6 @@ services:
       - QUEUE_NAME=my_queue
       - EXCHANGE_NAME=wtf
       - ROUTING_KEY=routing_key
-    volumes:
-      - shared-volume:/app/data
   setup:
     build:
       context: .
