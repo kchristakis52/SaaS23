@@ -171,37 +171,23 @@ app.get('/getuserinfo', (req, res) => {
   });
 });
 
+app.get('/getimage', (req, res) => {
+  const imageName = req.query.filename;
+  const chtype = req.query.chtype;
+  const imagePath = `../${chtype}-shared-data/${imageName}`;
+  fs.readFile(imagePath, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
 
 
+    res.contentType('image/png');
 
 
-
-// app.get("/produce-task1", async (req, res) => {
-//   const message = { data: "Your message to task1_queue" };
-//   await produceToQueue1(message);
-//   res.send("Message produced to task1_queue");
-// });
-
-// // Example route to produce a message to task2_queue
-// app.get("/produce-task2", async (req, res) => {
-//   const message = { data: "Your message to task2_queue" };
-//   await produceToQueue2(message);
-//   res.send("Message produced to task2_queue");
-// });
-
-// // Example route to produce a message to task3_queue
-// app.get("/produce-task3", async (req, res) => {
-//   const message = { data: "Your message to task3_queue" };
-//   await produceToQueue3(message);
-//   res.send("Message produced to task3_queue");
-// });
-
-// // Example route to produce a message to task4_queue
-// app.get("/produce-task4", async (req, res) => {
-//   const message = { data: "Your message to task4_queue" };
-//   await produceToQueue4(message);
-//   res.send("Message produced to task4_queue");
-// });
+    res.send(data);
+  });
+});
 
 // Start the server
 const port = 3001;

@@ -91,7 +91,7 @@ async function exportChartToImage(chartDetails, email, channel, connection, mess
         });
 
         const sql = 'INSERT INTO Diagrams (diagram_type, filepath, email) VALUES (?, ?, ?)';
-        const values = ["radar", filePath, email];
+        const values = ["radar", fileName, email];
 
         pool.query(sql, values, (err, result) => {
             if (err) {

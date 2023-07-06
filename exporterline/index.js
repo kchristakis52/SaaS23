@@ -2,7 +2,6 @@ const fs = require("fs");
 const { v4: uuidv4 } = require('uuid');
 const chartExporter = require("highcharts-export-server");
 const amqp = require("amqplib");
-const { v4: uuidv4 } = require("uuid");
 const mysql = require('mysql');
 // Initialize the exporter
 chartExporter.initPool();
@@ -109,7 +108,7 @@ async function exportChartToImage(chartDetails, email, channel, connection, mess
     });
 
     const sql = 'INSERT INTO Diagrams (diagram_type, filepath, email) VALUES (?, ?, ?)';
-    const values = ["line", filePath, email];
+    const values = ["line", fileName, email];
 
     pool.query(sql, values, (err, result) => {
       if (err) {
