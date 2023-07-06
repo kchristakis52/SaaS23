@@ -55,28 +55,40 @@ services:
     depends_on:
       messaging:
         condition: service_healthy
-  exporterline:
+#exporterline:
+#build:
+#context: ./frontend
+#dockerfile: Dockerfile
+#volumes:
+#- mydata:/shared-data  
+#depends_on:
+#messaging:
+#condition: service_healthy
+#command: sh -c "sleep 18 && npm start"
+  frontend:
     build:
-      context: ./exporterline
+      context: ./frontend
       dockerfile: Dockerfile
+    ports:
+      - "4007:3000"
     volumes:
       - line:/shared-data  
     depends_on:
       messaging:
         condition: service_healthy
     command: sh -c "sleep 18 && npm start"
-  # frontend:
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "4007:4007"
-  #   volumes:
-  #     - ./frontend/src:/app/src
-  #   stdin_open: true
-  #   tty: true
-  #   depends_on:
-  #     - gateway
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4007:3000"
+    volumes:
+      - ./frontend/src:/app/src
+    stdin_open: true
+    tty: true
+    depends_on:
+      - gateway
   exporterpie:
     build:
       context: ./exporterpie
