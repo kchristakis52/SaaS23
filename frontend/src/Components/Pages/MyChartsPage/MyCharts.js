@@ -13,6 +13,13 @@ const PreviousDiagrams = () => {
   const [diagramData, setDiagramData] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  const [imageSrc, setImageSrc] = useState("");
+  const openUrlInNewTab = (url) => {
+    const newWindow = window.open(url, "_blank");
+    if (newWindow) {
+      newWindow.focus();
+    }
+  };
   useEffect(() => {
     const url2 = `http://localhost:3001/getdiagrams?mail=${encodeURIComponent(
       localStorage["email"]
@@ -46,88 +53,54 @@ const PreviousDiagrams = () => {
       });
   }, []);
 
-  const handlePDFDownload = (diagram, downloadLink) => {
-    fetch("", {
-      method: "GET",
-      mode: "no-cors",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setPDF(data.PDF);
-        setSelectedDiagram(diagram);
-        window.open(downloadLink);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const handlePDFDownload = (chtype, filepath) => {
+    const url = `http://localhost:3001/imagetopdf?chtype=${encodeURIComponent(
+      chtype
+    )}&filename=${encodeURIComponent(filepath)}`;
+    openUrlInNewTab(url);
   };
-  const handlePNGDownload = (diagram, downloadLink) => {
-    const url = `http://localhost:3001/getimage?chtype=${encodeURIComponent(
-      diagramTypeMap
-    )}&filename=${encodeURIComponent(Filepath)}`;
-
-    fetch(url, {
-      method: "GET",
-    })
-      .then((response) => {
-        console.log(response.status);
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Error: " + response.status);
-        }
-      })
-      .then((data) => {
-        console.log(data);
-        setDiagramData(data);
-        if (data) {
-          setUploadSuccess(true); // Set upload success status
-          // Handle the response from the backend
-          console.log(data);
-        } else {
-          setErrorAlertOpen(true);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setErrorAlertOpen(true);
-      });
+  const handlePNGDownload = (chtype, filepath) => {
+    const url = `http://localhost:3001/downloadimage?chtype=${encodeURIComponent(
+      chtype
+    )}&filename=${encodeURIComponent(filepath)}`;
+    openUrlInNewTab(url);
   };
 
-  const handleHTMLDownload = (diagram, downloadLink) => {
-    fetch("", {
-      method: "GET",
-      mode: "no-cors",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setJPEG(data.JPEG);
-        setSelectedDiagram(diagram);
-        window.open(downloadLink);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+  const handleHTMLDownload = (chtype, filepath) => {
+    const url = `http://localhost:3001/imagetohtml?chtype=${encodeURIComponent(
+      chtype
+    )}&filename=${encodeURIComponent(filepath)}`;
+    openUrlInNewTab(url);
   };
 
-  const handleSVGDownload = (diagram, downloadLink) => {
-    fetch("", {
-      method: "GET",
-      mode: "no-cors",
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setSVG(data.SVG);
-        setSelectedDiagram(diagram);
-        window.open(downloadLink);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+  // const handleSVGDownload = (diagram, downloadLink) => {
+  //   const url = `http://localhost:3001/downloadimage?chtype=${encodeURIComponent(
+  //     chtype
+  //   )}&filename=${encodeURIComponent(filepath)}`;
+  //   openUrlInNewTab(url);
+  // };
 
-  const handleChartTypeClick = (diagram) => {
+  const handleChartTypeClick = (chtype, filepath, diagram) => {
+    fetchImage(chtype, filepath);
     setSelectedDiagram(diagram);
+  };
+  const fetchImage = async (chtype, filepath) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3001/getimage?chtype=${encodeURIComponent(
+          chtype
+        )}&filename=${encodeURIComponent(filepath)}`
+      );
+      if (!response.ok) {
+        throw new Error("Failed to fetch image");
+      }
+      console.log(response);
+      const blob = await response.blob();
+      const imageUrl = URL.createObjectURL(blob);
+      setImageSrc(imageUrl);
+    } catch (error) {
+      console.log("Error fetching image:", error);
+    }
   };
 
   return (
@@ -143,7 +116,6 @@ const PreviousDiagrams = () => {
             <th>Chart Type</th>
             <th>Diagram Name</th>
             <th>Created on</th>
-            <th>Filepath</th>
             <th>Download</th>
           </tr>
         </thead>
@@ -153,44 +125,57 @@ const PreviousDiagrams = () => {
               <tr key={diagram.diagram_id}>
                 <td>{diagram.diagram_id}</td>
                 <td>
-                  <button onClick={() => handleChartTypeClick(diagram)}>
+                  <button
+                    onClick={() =>
+                      handleChartTypeClick(
+                        diagram.diagram_type,
+                        diagram.filepath,
+                        diagram
+                      )
+                    }
+                  >
                     {diagram.diagram_type}
                   </button>
                 </td>
                 <td>{diagram.diagram_name}</td>
                 <td>{diagram.diagram_creation}</td>
                 <td>
-                  <a href={diagram.filepath}></a>
-                </td>
-                <td>
                   <div>
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() => handlePDFDownload()}
+                      onClick={() =>
+                        handlePDFDownload(
+                          diagram.diagram_type,
+                          diagram.filepath
+                        )
+                      }
                     >
                       PDF
                     </Button>
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() => handlePNGDownload()}
+                      onClick={() =>
+                        handlePNGDownload(
+                          diagram.diagram_type,
+                          diagram.filepath
+                        )
+                      }
                     >
                       PNG
                     </Button>
                     <Button
                       variant="contained"
                       color="success"
-                      onClick={() => handleHTMLDownload()}
+                      onClick={() =>
+                        handleHTMLDownload(
+                          diagram.diagram_type,
+                          diagram.filepath
+                        )
+                      }
                     >
                       HTML
-                    </Button>
-                    <Button
-                      variant="contained"
-                      color="success"
-                      onClick={() => handleSVGDownload()}
-                    >
-                      SVG
                     </Button>
                   </div>
                 </td>
@@ -203,7 +188,7 @@ const PreviousDiagrams = () => {
         <div>
           <h3>Preview</h3>
           <div style={{ textAlign: "center" }}>
-            <img src={selectedDiagram.filepath} alt="Diagram Preview" />
+            {imageSrc && <img src={imageSrc} alt="Fetched Image" />}
           </div>
         </div>
       )}
