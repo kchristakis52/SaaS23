@@ -144,14 +144,14 @@ const CreateChart = () => {
               }}
               onSelect={handleChartTypeChange}
             >
-              <DropdownItem eventKey="pie">Pie Diagram</DropdownItem>
-              <Dropdown.Item eventKey="line">Line Diagram</Dropdown.Item>
-              <Dropdown.Item eventKey="column">Column Diagram</Dropdown.Item>
-              <Dropdown.Item eventKey="dependency-wheel">
+              <Dropdown.Item eventKey="pieq">Pie Diagram</Dropdown.Item>
+              <Dropdown.Item eventKey="lineq">Line Diagram</Dropdown.Item>
+              <Dropdown.Item eventKey="columnq">Column Diagram</Dropdown.Item>
+              <Dropdown.Item eventKey="wheelq">
                 Dependency Wheel Diagram
               </Dropdown.Item>
-              <Dropdown.Item eventKey="polar">Polar Diagram</Dropdown.Item>
-              <Dropdown.Item eventKey="word-cloud">
+              <Dropdown.Item eventKey="radarq">Polar Diagram</Dropdown.Item>
+              <Dropdown.Item eventKey="wordq">
                 Word cloud Diagram
               </Dropdown.Item>
             </Dropdown>
