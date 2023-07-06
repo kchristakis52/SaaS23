@@ -10,10 +10,11 @@ const PreviousDiagrams = () => {
   const [PNG, setPNG] = useState(null);
   const [JPEG, setJPEG] = useState(null);
   const [SVG, setSVG] = useState(null);
+  const [diagramData, setDiagramData] = useState(null);
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
   useEffect(() => {
-    const url2 = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
+    const url2 = `http://localhost:3001/getdiagrams?mail=${encodeURIComponent(
       localStorage["email"]
     )}`;
 
@@ -30,7 +31,8 @@ const PreviousDiagrams = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        setDiagramData(data);
+        if (data) {
           setUploadSuccess(true); // Set upload success status
           // Handle the response from the backend
           console.log(data);
@@ -60,21 +62,39 @@ const PreviousDiagrams = () => {
       });
   };
   const handlePNGDownload = (diagram, downloadLink) => {
-    fetch("", {
+    const url2 = `http://localhost:3001/getimage?chtype=${encodeURIComponent(
+      diagramData.diagram_type
+    )}?filename=${encodeURIComponent(localStorage["filename"])}`;
+
+    fetch(url2, {
       method: "GET",
-      mode: "no-cors",
     })
-      .then((response) => response.json())
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error("Error: " + response.status);
+        }
+      })
       .then((data) => {
-        setPNG(data.PNG);
-        setSelectedDiagram(diagram);
-        window.open(downloadLink);
+        console.log(data);
+        setDiagramData(data);
+        if (data) {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
+          console.log(data);
+        } else {
+          setErrorAlertOpen(true);
+        }
       })
       .catch((error) => {
         console.error(error);
+        setErrorAlertOpen(true);
       });
   };
-  const handleJPEGDownload = (diagram, downloadLink) => {
+
+  const handleHTMLDownload = (diagram, downloadLink) => {
     fetch("", {
       method: "GET",
       mode: "no-cors",
@@ -89,6 +109,7 @@ const PreviousDiagrams = () => {
         console.error(error);
       });
   };
+
   const handleSVGDownload = (diagram, downloadLink) => {
     fetch("", {
       method: "GET",
@@ -125,45 +146,50 @@ const PreviousDiagrams = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td></td>
-            <td>
-              <button onClick={() => handleChartTypeClick()}>{}</button>
-            </td>
-            <td>{}</td>
-            <td>
-              <div>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={() => handlePDFDownload()}
-                >
-                  PDF
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={() => handlePNGDownload()}
-                >
-                  PNG
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={() => handleJPEGDownload()}
-                >
-                  JPEG
-                </Button>
-                <Button
-                  variant="contained"
-                  color="success"
-                  onClick={() => handleSVGDownload()}
-                >
-                  SVG
-                </Button>
-              </div>
-            </td>
-          </tr>
+          {diagramData &&
+            diagramData.map((diagram) => (
+              <tr key={diagram.diagram_id}>
+                <td>{diagram.diagram_id}</td>
+                <td>
+                  <button onClick={() => handleChartTypeClick(diagram)}>
+                    {diagram.diagram_type}
+                  </button>
+                </td>
+                <td>{diagram.created_on}</td>
+                <td>
+                  <div>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handlePDFDownload()}
+                    >
+                      PDF
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handlePNGDownload()}
+                    >
+                      PNG
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleHTMLDownload()}
+                    >
+                      HTML
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="success"
+                      onClick={() => handleSVGDownload()}
+                    >
+                      SVG
+                    </Button>
+                  </div>
+                </td>
+              </tr>
+            ))}
         </tbody>
       </table>
 
@@ -171,7 +197,7 @@ const PreviousDiagrams = () => {
         <div>
           <h3>Preview</h3>
           <div style={{ textAlign: "center" }}>
-            <img src={selectedDiagram.image} alt="Diagram Preview" />
+            <img src={selectedDiagram.filepath} alt="Diagram Preview" />
           </div>
         </div>
       )}

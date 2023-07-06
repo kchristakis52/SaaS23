@@ -24,7 +24,7 @@ const NewChartForm = () => {
       })
       .then((data) => {
         console.log(data);
-        if (data.status === "success") {
+        if (data) {
           setUploadSuccess(true); // Set upload success status
           // Handle the response from the backend
           console.log(data);

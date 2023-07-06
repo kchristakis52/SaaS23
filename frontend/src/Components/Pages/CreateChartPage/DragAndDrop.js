@@ -38,6 +38,8 @@ function DragDropFile() {
         setErrorMessage("Invalid file format. Please upload a CSV file.");
         setErrorAlertOpen(true);
         return;
+      } else {
+        setErrorMessage("Data sent sucessfully");
       }
 
       // Check file mime type
@@ -58,10 +60,12 @@ function DragDropFile() {
       const email = params.get("email");
       const formData = new FormData();
       formData.append("csv", file);
+      localStorage.setItem("filename", file.name.split(".")[0]);
       console.log(username);
       formData.append("email", email);
       formData.append("user", username);
       formData.append("chtype", localStorage["selectedChartType"]);
+      formData.append("filename", fileName);
 
       fetch(url, {
         method: "POST",
