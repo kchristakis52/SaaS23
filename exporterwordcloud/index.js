@@ -69,15 +69,7 @@ async function consumeFromQueue(queueName) {
 
                     }
                 };
-
-                //const outputFile = "column.png";
-                exportChartToImage(
-                    chartDetails,
-                    email,
-                    channel,
-                    connection,
-                    message
-                );
+                exportChartToImage(chartDetails, email, channel, connection, message);
             }
         });
     } catch (error) {

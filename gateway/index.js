@@ -117,7 +117,7 @@ app.get('/users', (req, res) => {
     }
   });
 });
-
+//localhost:3001/userpay?mail=kxrist@&amount=10
 app.post("/userpay", async (req, res) => {
 
   let email = req.query.mail;
@@ -135,7 +135,6 @@ app.post("/userpay", async (req, res) => {
       }
     }
   );
-
 });
 
 app.get('/getdiagrams', (req, res) => {
@@ -148,6 +147,23 @@ app.get('/getdiagrams', (req, res) => {
     if (err) {
       console.error('Error retrieving diagrams: ' + err.stack);
       res.status(500).send('Error retrieving diagrams');
+      return;
+    }
+
+    res.status(200).json(results);
+  });
+});
+
+app.get('/getuserinfo', (req, res) => {
+  const userEmail = req.query.mail;
+
+  const query = 'SELECT * FROM Users WHERE email = ?';
+  const values = [userEmail];
+
+  pool.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Error retrieving user stats: ' + err.stack);
+      res.status(500).send('Error retrieving user stats');
       return;
     }
 

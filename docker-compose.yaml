@@ -46,20 +46,25 @@ services:
     ports:
       - "3001:3001"
     volumes:
-      - mydata:/shared-data  
+      - line:/line-shared-data
+      - word:/word-shared-data
+      - column:/column-shared-data
+      - pie:/pie-shared-data
+      - radar:/radar-shared-data 
+      - wheel:/wheel-shared-data 
     depends_on:
       messaging:
         condition: service_healthy
-#exporterline:
-#build:
-#context: ./frontend
-#dockerfile: Dockerfile
-#volumes:
-#- mydata:/shared-data  
-#depends_on:
-#messaging:
-#condition: service_healthy
-#command: sh -c "sleep 18 && npm start"
+  exporterline:
+    build:
+      context: ./exporterline
+      dockerfile: Dockerfile
+    volumes:
+      - line:/shared-data  
+    depends_on:
+      messaging:
+        condition: service_healthy
+    command: sh -c "sleep 18 && npm start"
   frontend:
     build:
       context: ./frontend
@@ -72,56 +77,61 @@ services:
     tty: true
     depends_on:
       - gateway
-#exporterpie:
-#build:
-#  context: ./exporterpie
-#  dockerfile: Dockerfile
-#volumes:
-#  - mydata:/shared-data  
-#depends_on:
-#  messaging:
-#    condition: service_healthy
-#command: sh -c "sleep 18 && npm start"
-#exporterradar:
-#build:
-#  context: ./exporterradar
-#  dockerfile: Dockerfile
-#volumes:
-#  - mydata:/shared-data  
-#depends_on:
-#  messaging:
-#    condition: service_healthy
-#command: sh -c "sleep 18 && npm start"
-#exportercolumn:
-#build:
-#  context: ./exportercolumn
-#  dockerfile: Dockerfile
-#volumes:
-#  - mydata:/shared-data  
-#depends_on:
-#  messaging:
-#    condition: service_healthy
-#command: sh -c "sleep 18 && npm start"
-#exporterdependencywheel:
-#build:
-#  context: ./exporterdependencywheel
-#  dockerfile: Dockerfile
-#volumes:
-#  - mydata:/shared-data
-#depends_on:
-#  messaging:
-#    condition: service_healthy
-#command: sh -c "sleep 18 && npm start"
-#exporterwordcloud:
-#build:
-#  context: ./exporterwordcloud
-#  dockerfile: Dockerfile
-#volumes:
-#  - mydata:/shared-data  
-#depends_on:
-#  messaging:
-#    condition: service_healthy
-#command: sh -c "sleep 18 && npm start"
+  exporterpie:
+    build:
+      context: ./exporterpie
+      dockerfile: Dockerfile
+    volumes:
+      - pie:/shared-data  
+    depends_on:
+      messaging:
+        condition: service_healthy
+    command: sh -c "sleep 18 && npm start"
+  exporterradar:
+    build:
+      context: ./exporterradar
+      dockerfile: Dockerfile
+    volumes:
+      - radar:/shared-data   
+    depends_on:
+      messaging:
+        condition: service_healthy
+    command: sh -c "sleep 18 && npm start"
+  exportercolumn:
+    build:
+      context: ./exportercolumn
+      dockerfile: Dockerfile
+    volumes:
+      - column:/shared-data   
+    depends_on:
+      messaging:
+        condition: service_healthy
+    command: sh -c "sleep 18 && npm start"
+  exporterdependencywheel:
+    build:
+      context: ./exporterdependencywheel
+      dockerfile: Dockerfile
+    volumes:
+      - wheel:/shared-data 
+    depends_on:
+      messaging:
+        condition: service_healthy
+    command: sh -c "sleep 18 && npm start"
+  exporterwordcloud:
+    build:
+      context: ./exporterwordcloud
+      dockerfile: Dockerfile
+    volumes:
+      - word:/shared-data  
+    depends_on:
+      messaging:
+        condition: service_healthy
+    command: sh -c "sleep 18 && npm start"
 
 volumes:
-  mydata:
+  line:
+  word:
+  radar:
+  column:
+  pie:
+  wheel:
