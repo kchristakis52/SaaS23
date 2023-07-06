@@ -1,9 +1,13 @@
 import classes from "./LoginPage.module.css";
 import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
+import React from "react";
 
 export default function Login() {
   const [user, setUser] = useState({});
+  const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [uploadSuccess, setUploadSuccess] = React.useState(false);
 
   function handleCallbackResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
@@ -27,9 +31,74 @@ export default function Login() {
     //console.log(formattedDate);
     //console.log(formattedTime);
     localStorage.setItem("last_login", formattedDate + " " + formattedTime);
-    window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
-      username
+    const url1 = `http://localhost:3001/userloggedin?mail=${encodeURIComponent(
+      localStorage["email"]
+    )}&lastlogin=${encodeURIComponent(
+      localStorage["last_login"]
+    )}&first_name=${encodeURIComponent(
+      localStorage["first_name"]
+    )}&last_name=${encodeURIComponent(localStorage["last_name"])}`;
+    const url2 = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
+      localStorage["email"]
     )}`;
+    fetch(url1, {
+      method: "POST",
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .then((data) => {
+        console.log("Response status:", data.status);
+        console.log(data);
+        if (data.status === "success") {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
+          console.log(localStorage["username"]);
+          //window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
+          //username
+          //          )}`;
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorAlertOpen(true);
+      });
+    fetch(url2, {
+      method: "GET",
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .then((data) => {
+        console.log("Response status:", data.status);
+        console.log(data);
+        if (data.status === "success") {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
+          console.log(localStorage["username"]);
+          //window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
+          //username
+          //          )}`;
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorAlertOpen(true);
+      });
   }
 
   useEffect(() => {

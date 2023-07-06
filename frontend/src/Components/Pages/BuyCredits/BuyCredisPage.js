@@ -29,7 +29,11 @@ const BuyCredits = () => {
 
   const sendNumber5ToBackend = async (number) => {
     try {
-      const response = await fetch("/api/endpoint", {
+      const url = `http://localhost:3001/userpay?mail=${encodeURIComponent(
+        localStorage["email"]
+      )}&amount=${encodeURIComponent(number)}`;
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -37,18 +41,24 @@ const BuyCredits = () => {
         body: JSON.stringify({ number }),
       });
 
+      // Handle the response from the backend
       if (response.ok) {
-        console.log("Number sent successfully");
+        const data = await response.json();
+        console.log(data);
       } else {
-        console.error("Failed to send number");
+        throw new Error("Error: " + response.status);
       }
     } catch (error) {
-      console.error("Error sending number:", error);
+      console.error(error);
     }
   };
   const sendNumber10ToBackend = async (number) => {
     try {
-      const response = await fetch("/api/endpoint", {
+      const url = `http://localhost:3001/userpay?mail=${encodeURIComponent(
+        localStorage["email"]
+      )}&amount=${encodeURIComponent(number)}`;
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -56,18 +66,24 @@ const BuyCredits = () => {
         body: JSON.stringify({ number }),
       });
 
+      // Handle the response from the backend
       if (response.ok) {
-        console.log("Number sent successfully");
+        const data = await response.json();
+        console.log(data);
       } else {
-        console.error("Failed to send number");
+        throw new Error("Error: " + response.status);
       }
     } catch (error) {
-      console.error("Error sending number:", error);
+      console.error(error);
     }
   };
   const sendNumber20ToBackend = async (number) => {
     try {
-      const response = await fetch("/api/endpoint", {
+      const url = `http://localhost:3001/userpay?mail=${encodeURIComponent(
+        localStorage["email"]
+      )}&amount=${encodeURIComponent(number)}`;
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -75,18 +91,24 @@ const BuyCredits = () => {
         body: JSON.stringify({ number }),
       });
 
+      // Handle the response from the backend
       if (response.ok) {
-        console.log("Number sent successfully");
+        const data = await response.json();
+        console.log(data);
       } else {
-        console.error("Failed to send number");
+        throw new Error("Error: " + response.status);
       }
     } catch (error) {
-      console.error("Error sending number:", error);
+      console.error(error);
     }
   };
   const sendNumber50ToBackend = async (number) => {
     try {
-      const response = await fetch("/api/endpoint", {
+      const url = `http://localhost:3001/userpay?mail=${encodeURIComponent(
+        localStorage["email"]
+      )}&amount=${encodeURIComponent(number)}`;
+
+      const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -94,13 +116,15 @@ const BuyCredits = () => {
         body: JSON.stringify({ number }),
       });
 
+      // Handle the response from the backend
       if (response.ok) {
-        console.log("Number sent successfully");
+        const data = await response.json();
+        console.log(data);
       } else {
-        console.error("Failed to send number");
+        throw new Error("Error: " + response.status);
       }
     } catch (error) {
-      console.error("Error sending number:", error);
+      console.error(error);
     }
   };
   return (
