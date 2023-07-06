@@ -117,7 +117,7 @@ app.get('/users', (req, res) => {
     }
   });
 });
-
+//localhost:3001/userpay?mail=kxrist@&amount=10
 app.post("/userpay", async (req, res) => {
 
   let email = req.query.mail;
@@ -135,7 +135,6 @@ app.post("/userpay", async (req, res) => {
       }
     }
   );
-
 });
 
 app.get('/getdiagrams', (req, res) => {
