@@ -1,16 +1,15 @@
-import { React, useEffect, useState } from "react";
+import React from "react";
 import classes from "./NewChartPage.module.css";
 import Logo from "../../Logo/Logo";
 import { Button, FormLabel, Snackbar } from "@mui/material";
 
 const NewChartForm = () => {
-  const [uploadSuccess, setUploadSuccess] = useState(false);
-  const [errorAlertOpen, setErrorAlertOpen] = useState(false);
-  const [credits, setCredits] = useState(null);
+  const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
+  const [credits, setCredits] = React.useState(null);
   const [errorMessage, setErrorMessage] = React.useState("");
-  const [numberOfChartrs, setNumberofCharts] = useState(null);
+  const [numberOfChartrs, setNumberofCharts] = React.useState(null);
 
-  useEffect(() => {
+  React.useEffect(() => {
     const url = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
       localStorage["email"]
     )}`;
@@ -25,13 +24,13 @@ const NewChartForm = () => {
           console.log(response);
           return response.json();
         } else {
+          setErrorAlertOpen(true);
           throw new Error("Error: " + response.status);
         }
       })
       .then((data) => {
         console.log(data);
         if (data) {
-          setUploadSuccess(true); // Set upload success status
           // Handle the response from the backend
           setCredits(data.diagram_Limit);
           setNumberofCharts(data.diagram_count);
@@ -39,6 +38,7 @@ const NewChartForm = () => {
           if (data.diagram_Limit <= data.diagram_count) {
             setErrorMessage("Not enough credits !");
             setErrorAlertOpen(true);
+            return;
           }
         } else {
           setErrorAlertOpen(true);
