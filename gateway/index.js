@@ -1,7 +1,6 @@
 const express = require("express");
 const multer = require("multer");
 const mysql = require('mysql');
-const csv = require("csv-parser");
 const fs = require("fs");
 const cors = require("cors");
 const PDFDocument = require('pdfkit');
@@ -40,9 +39,8 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
 
     const message = {
       data: req.file.buffer.toString("utf-8"),
-      filename: chartname,
-      user: user,
-      chtype: chtype,
+      chartname: chartname,
+      user: user
     };
 
     await produceToQueue(message, chtype);
@@ -187,6 +185,25 @@ app.get('/getimage', (req, res) => {
   });
 });
 
+app.get('/downloadimage', (req, res) => {
+  const imageName = req.query.filename;
+  const chtype = req.query.chtype;
+  const imagePath = `../${chtype}-shared-data/${imageName}.png`;
+  fs.readFile(imagePath, (err, data) => {
+    if (err) {
+      console.error(err);
+      return res.status(500).send('Internal Server Error');
+    }
+
+    // Set the appropriate headers for file download
+    res.setHeader('Content-Disposition', 'attachment; filename="image.png"');
+    res.setHeader('Content-Type', 'image/png');
+
+    // Send the image file as the response
+    res.send(data);
+  });
+});
+
 app.get('/imagetohtml', (req, res) => {
   const imageName = req.query.filename;
   const chtype = req.query.chtype;
@@ -215,10 +232,11 @@ app.get('/imagetohtml', (req, res) => {
       </html>
     `;
 
-    // Set the appropriate content type
-    res.contentType('text/html');
+    // Set the appropriate headers for file download
+    res.setHeader('Content-Disposition', 'attachment; filename="converted_image.html"');
+    res.setHeader('Content-Type', 'text/html');
 
-    // Send the HTML as the response
+    // Send the HTML file as the response
     res.send(html);
   });
 });
@@ -228,15 +246,6 @@ app.get('/imagetopdf', (req, res) => {
   const chtype = req.query.chtype;
   const imagePath = `../${chtype}-shared-data/${imageName}.png`;
 
-  // Create a new PDF document
-  const doc = new PDFDocument();
-
-  // Set the appropriate content type
-  res.contentType('application/pdf');
-
-  // Pipe the PDF document to the response
-  doc.pipe(res);
-
   // Read the PNG file asynchronously
   fs.readFile(imagePath, (err, data) => {
     if (err) {
@@ -244,7 +253,17 @@ app.get('/imagetopdf', (req, res) => {
       return res.status(500).send('Internal Server Error');
     }
 
-    // Embed the PNG image into the PDF document
+    // Create a new PDF document
+    const doc = new PDFDocument();
+
+    // Set the appropriate headers for file download
+    res.setHeader('Content-Disposition', 'attachment; filename="converted_image.pdf"');
+    res.setHeader('Content-Type', 'application/pdf');
+
+    // Pipe the PDF document to the response
+    doc.pipe(res);
+
+    // Embed the PNG image into the PDF document and fit it to the page
     doc.image(data);
 
     // Finalize the PDF document

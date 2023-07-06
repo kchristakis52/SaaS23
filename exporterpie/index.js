@@ -26,6 +26,7 @@ async function consumeFromQueue(queueName) {
 
                 const jsonobj = JSON.parse(messageContent);
                 const email = jsonobj.user;
+                const diagram_name = jsonobj.chartname;
                 console.log(email);
                 // Process the received message and generate the chart image
                 const lines = jsonobj.data.split(/\r?\n/);
@@ -49,15 +50,15 @@ async function consumeFromQueue(queueName) {
                         },
                     }
                 };
-                exportChartToImage(chartDetails, email, channel, connection, message);
-            }
-        });
-    } catch (error) {
-        console.log(error);
-    }
+                exportChartToImage(chartDetails, email, channel, connection, message, diagram_name);
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
-async function exportChartToImage(chartDetails, email, channel, connection, message) {
+async function exportChartToImage(chartDetails, email, channel, connection, message, diagram_name) {
     try {
         const uniqueIdentifier = uuidv4();
         const fileName = `Sample_${uniqueIdentifier}`;
@@ -90,8 +91,8 @@ async function exportChartToImage(chartDetails, email, channel, connection, mess
             database: 'SaaSDB'
         });
 
-        const sql = 'INSERT INTO Diagrams (diagram_type, filepath, email) VALUES (?, ?, ?)';
-        const values = ["pie", fileName, email];
+        const sql = 'INSERT INTO Diagrams (diagram_type, filepath, email, diagram_name, diagram_creation) VALUES (?, ?, ?, ?, ?)';
+        const values = ["pie", fileName, email, diagram_name, new Date().toISOString().slice(0, 19).replace('T', ' ')];
 
         pool.query(sql, values, (err, result) => {
             if (err) {
