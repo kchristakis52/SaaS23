@@ -39,9 +39,8 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
 
     const message = {
       data: req.file.buffer.toString("utf-8"),
-      filename: chartname,
-      user: user,
-      chtype: chtype,
+      chartname: chartname,
+      user: user
     };
 
     await produceToQueue(message, chtype);
