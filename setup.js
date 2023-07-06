@@ -29,8 +29,8 @@ async function setupRabbitMQ() {
       },
       { auth }
     );
-
-    const queues = ["task1_queue", "task2_queue", "task3_queue", "task4_queue"];
+    const queues = ["columnq", "lineq", "radarq", "pieq", "wheelq", "wordq"];
+    //const queues = ["task1_queue", "task2_queue", "task3_queue", "task4_queue"];
     const routingKeys = queues;
 
     for (let i = 0; i < queues.length; i++) {

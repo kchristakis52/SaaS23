@@ -7,10 +7,10 @@ async function connectToQueue() {
     const connection = await amqp.connect("amqp://guest:guest@messaging:5672/");
     const channel = await connection.createChannel();
 
-    const exchangeName = "task_exchange";
+    const exchangeName = "exchangeDirect";
     await channel.assertExchange(exchangeName, "direct", { durable: true });
 
-    const queues = ["task1_queue", "task2_queue", "task3_queue", "task4_queue"];
+    const queues = ["columnq", "lineq", "radarq", "pieq", "wheelq", "wordq"];
     const routingKeys = queues;
 
     for (let i = 0; i < queues.length; i++) {
@@ -49,11 +49,11 @@ async function closeConnection(channel, connection) {
   }
 }
 
-async function produceToQueue1(message) {
+async function produceToQueue(message, queueName) {
   try {
     const { connection, channel } = await connectToQueue();
 
-    let queueName = "task1_queue";
+    
 
     await sendToQueue(channel, queueName, message);
 
@@ -63,49 +63,8 @@ async function produceToQueue1(message) {
   }
 }
 
-async function produceToQueue2(message) {
-  try {
-    const { connection, channel } = await connectToQueue();
 
-    let queueName = "task2_queue";
-
-    await sendToQueue(channel, queueName, message);
-
-    await closeConnection(channel, connection);
-  } catch (error) {
-    console.log(error);
-  }
-}
-async function produceToQueue3(message) {
-  try {
-    const { connection, channel } = await connectToQueue();
-
-    let queueName = "task3_queue";
-
-    await sendToQueue(channel, queueName, message);
-
-    await closeConnection(channel, connection);
-  } catch (error) {
-    console.log(error);
-  }
-}
-async function produceToQueue4(message) {
-  try {
-    const { connection, channel } = await connectToQueue();
-
-    let queueName = "task4_queue";
-
-    await sendToQueue(channel, queueName, message);
-
-    await closeConnection(channel, connection);
-  } catch (error) {
-    console.log(error);
-  }
-}
 
 module.exports = {
-  produceToQueue1,
-  produceToQueue2,
-  produceToQueue3,
-  produceToQueue4,
+  produceToQueue,
 };

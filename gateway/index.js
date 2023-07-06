@@ -8,20 +8,17 @@ const cors = require("cors");
 const app = express();
 
 const {
-  produceToQueue1,
-  produceToQueue2,
-  produceToQueue3,
-  produceToQueue4,
+  produceToQueue
 } = require("./producer");
 
 const upload = multer({ storage: multer.memoryStorage() }); // Destination folder for storing uploaded CSVs
 
 // MySQL Connection
-const connection = mysql.createConnection({
-  host: 'your_database_host',
-  user: 'your_username',
-  password: 'your_password',
-  database: 'your_database_name'
+const pool = mysql.createPool({
+  host: 'mysql',
+  user: 'root',
+  password: 'password',
+  database: 'SaaSDB'
 });
 
 app.use(express.json());
@@ -45,8 +42,8 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
       user: user,
       chtype: chtype,
     };
-    
-    await produceToQueue1(message);
+
+    await produceToQueue(message, chtype);
 
     res.status(200).json({
       status: "success",
@@ -62,98 +59,133 @@ app.post("/parse-csv", upload.single("csv"), async (req, res) => {
 
 // API route to handle user login
 app.post("/userloggedin", async (req, res) => {
-  // Code for handling the "/userloggedin" route
-  // ...
 
-  // Connect to the MySQL database
-  connection.connect((err) => {
-    if (err) {
-      console.error('Error connecting to MySQL database:', err);
-      return res.status(500).json({ error: 'Error connecting to the database' });
+  let email = req.query.mail;
+  let first_name = req.query.first_name;
+  let last_name = req.query.last_name;
+  let last_login = req.query.last_login;
+
+
+  // Check if the user already exists in the database
+  const query = 'SELECT * FROM Users WHERE email = ?';
+  pool.query(query, [email], (error, results) => {
+    if (error) {
+      console.error('Error executing MySQL query:', error);
+      return res.status(500).json({ error: 'Error retrieving user from database' });
     }
 
-    console.log('Connected to MySQL database!');
-
-    // Read the schema.sql file
-    const schemaPath = 'database/schema.sql';
-    const schema = fs.readFileSync(schemaPath, 'utf8');
-
-    // Execute the schema.sql file to create the tables and define the schema
-    connection.query(schema, (error, results) => {
-      if (error) {
-        console.error('Error executing schema.sql:', error);
-        return res.status(500).json({ error: 'Error executing schema.sql' });
-      }
-
-      console.log('Database schema created successfully!');
-
-      // Additional logic for the "/userloggedin" route
-      const { email, first_name, last_name } = req.body;
-
-      // Check if the user already exists in the database
-      const query = 'SELECT * FROM Users WHERE email = ?';
-      connection.query(query, [email], (error, results) => {
-        if (error) {
-          console.error('Error executing MySQL query:', error);
-          return res.status(500).json({ error: 'Error retrieving user from database' });
+    if (results.length === 0) {
+      // User doesn't exist, add them to the database
+      const insertQuery = 'INSERT INTO Users VALUES (?, ?, ?, ?, ?)';
+      pool.query(insertQuery, [email, first_name, last_name, last_login, 10], (insertError) => {
+        if (insertError) {
+          console.error('Error executing MySQL query:', insertError);
+          return res.status(500).json({ error: 'Error adding user to database' });
         }
-    
-        if (results.length === 0) {
-          // User doesn't exist, add them to the database
-          const insertQuery = 'INSERT INTO Users (email, first_name, last_name) VALUES (?, ?, ?)';
-          connection.query(insertQuery, [email, first_name, last_name], (insertError) => {
-            if (insertError) {
-              console.error('Error executing MySQL query:', insertError);
-              return res.status(500).json({ error: 'Error adding user to database' });
-            }
-    
-            // User added successfully
-            return res.json({ message: 'User added successfully' });
-          });
-        } else {
-          // User already exists, handle login logic here
-          // ...
-          return res.json({ message: 'User logged in' });
-        }
+
+        // User added successfully
+        return res.json({ message: 'User added successfully' });
       });
-
-      // Close the MySQL connection
-      connection.end((err) => {
-        if (err) {
-          console.error('Error closing MySQL connection:', err);
+    } else {
+      pool.query(
+        'UPDATE Users SET last_login = ? WHERE email = ?',
+        [last_login, email],
+        (updateError, updateResults) => {
+          if (updateError) {
+            console.error('Error updating the user:', updateError);
+            res.status(500).json({ error: "Failed to upload User" });
+          } else {
+            res.status(200).json({ message: "User updated successfully" });
+          }
         }
-        console.log('MySQL connection closed.');
-      });
-    });
+      );
+
+    }
+  });
+
+
+});
+
+
+app.get('/users', (req, res) => {
+  pool.query('SELECT * FROM Users', (error, results) => {
+    if (error) {
+      console.error('Error executing the query:', error);
+      res.status(500).json({ error: 'Error executing the query' });
+    } else {
+      res.json(results);
+    }
   });
 });
 
-app.get("/produce-task1", async (req, res) => {
-  const message = { data: "Your message to task1_queue" };
-  await produceToQueue1(message);
-  res.send("Message produced to task1_queue");
+app.post("/userpay", async (req, res) => {
+
+  let email = req.query.mail;
+  let amount = req.query.amount;
+
+  pool.query(
+    'UPDATE Users SET diagram_Limit = diagram_Limit + ? WHERE email = ?',
+    [amount, email],
+    (updateError, updateResults) => {
+      if (updateError) {
+        console.error('Error updating the user:', updateError);
+        res.status(500).json({ error: "Failed to upload User" });
+      } else {
+        res.status(200).json({ message: "User updated successfully" });
+      }
+    }
+  );
+
 });
 
-// Example route to produce a message to task2_queue
-app.get("/produce-task2", async (req, res) => {
-  const message = { data: "Your message to task2_queue" };
-  await produceToQueue2(message);
-  res.send("Message produced to task2_queue");
+app.get('/getdiagrams', (req, res) => {
+  const userEmail = req.query.mail;
+
+  const query = 'SELECT * FROM Diagrams WHERE email = ?';
+  const values = [userEmail];
+
+  pool.query(query, values, (err, results) => {
+    if (err) {
+      console.error('Error retrieving diagrams: ' + err.stack);
+      res.status(500).send('Error retrieving diagrams');
+      return;
+    }
+
+    res.status(200).json(results);
+  });
 });
 
-// Example route to produce a message to task3_queue
-app.get("/produce-task3", async (req, res) => {
-  const message = { data: "Your message to task3_queue" };
-  await produceToQueue3(message);
-  res.send("Message produced to task3_queue");
-});
 
-// Example route to produce a message to task4_queue
-app.get("/produce-task4", async (req, res) => {
-  const message = { data: "Your message to task4_queue" };
-  await produceToQueue4(message);
-  res.send("Message produced to task4_queue");
-});
+
+
+
+
+// app.get("/produce-task1", async (req, res) => {
+//   const message = { data: "Your message to task1_queue" };
+//   await produceToQueue1(message);
+//   res.send("Message produced to task1_queue");
+// });
+
+// // Example route to produce a message to task2_queue
+// app.get("/produce-task2", async (req, res) => {
+//   const message = { data: "Your message to task2_queue" };
+//   await produceToQueue2(message);
+//   res.send("Message produced to task2_queue");
+// });
+
+// // Example route to produce a message to task3_queue
+// app.get("/produce-task3", async (req, res) => {
+//   const message = { data: "Your message to task3_queue" };
+//   await produceToQueue3(message);
+//   res.send("Message produced to task3_queue");
+// });
+
+// // Example route to produce a message to task4_queue
+// app.get("/produce-task4", async (req, res) => {
+//   const message = { data: "Your message to task4_queue" };
+//   await produceToQueue4(message);
+//   res.send("Message produced to task4_queue");
+// });
 
 // Start the server
 const port = 3001;

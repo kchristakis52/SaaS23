@@ -28,8 +28,8 @@ async function consumeFromQueue(queueName) {
                 // Process the received message and generate the chart image
                 const lines = jsonobj.data.split(/\r?\n/);
                 console.log(lines);
-                const title = lines[0].slice(0,-1);
-                title.splice(0,-1)
+                const title = lines[0];
+                
 
 
                 lines.splice(0, 1);
@@ -87,7 +87,7 @@ async function exportChartToImage(
             const fileName = `Sample_${uniqueIdentifier}.png`;
 
             // Save the image to file
-            fs.writeFileSync(`./${fileName}`, imageb64, "base64", (err) => {
+            fs.writeFileSync(`./shared-data/${fileName}`, imageb64, "base64", (err) => {
                 if (err) {
                     console.log(err);
                     return;
@@ -106,4 +106,4 @@ async function exportChartToImage(
 }
 
 // Example usage: Consume messages from a queue named "task1_queue"
-consumeFromQueue("task2_queue");
+consumeFromQueue("pieq");
