@@ -1,20 +1,29 @@
 import classes from "./LoginPage.module.css";
 import { useEffect, useState } from "react";
 import jwt_decode from "jwt-decode";
+import React from "react";
 
 export default function Login() {
   const [user, setUser] = useState({});
+  const [errorAlertOpen, setErrorAlertOpen] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [uploadSuccess, setUploadSuccess] = React.useState(false);
 
   function handleCallbackResponse(response) {
     console.log("Encoded JWT ID token: " + response.credential);
     let userObject = jwt_decode(response.credential);
     let token = response.credential;
     let username = userObject.name;
+    let namesArrray = userObject.name.split(" ");
+    let first_name = namesArrray[0];
+    let last_name = namesArrray[namesArrray.lenght - 1];
     let email = userObject.email;
     let timestamp = userObject.iat; // Extract the "iat" claim for the timestamp
     localStorage.setItem("token", token);
     localStorage.setItem("username", username);
     localStorage.setItem("email", email);
+    localStorage.setItem("first_name", first_name);
+    localStorage.setItem("last_name", last_name);
     console.log(userObject);
     setUser(userObject);
     document.getElementById("signInDiv").hidden = true;
@@ -27,9 +36,42 @@ export default function Login() {
     //console.log(formattedDate);
     //console.log(formattedTime);
     localStorage.setItem("last_login", formattedDate + " " + formattedTime);
-    window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
-      username
-    )}`;
+    const url = `http://localhost:3001/userloggedin?mail=${encodeURIComponent(
+      localStorage["email"]
+    )}&lastlogin=${encodeURIComponent(
+      localStorage["last_login"]
+    )}&first_name=${encodeURIComponent(
+      localStorage["first_name"]
+    )}&last_name=${encodeURIComponent(localStorage["last_name"])}`;
+    fetch(url, {
+      method: "POST",
+    })
+      .then((response) => {
+        console.log(response.status);
+        if (response.ok) {
+          return response.json();
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .then((data) => {
+        console.log("Response status:", data.status);
+        console.log(data);
+        if (data.status === "success") {
+          setUploadSuccess(true); // Set upload success status
+          // Handle the response from the backend
+          console.log(localStorage["username"]);
+          window.location.href = `http://localhost:4007/newchart?username=${encodeURIComponent(
+            username
+          )}`;
+        } else {
+          setErrorAlertOpen(true);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+        setErrorAlertOpen(true);
+      });
   }
 
   useEffect(() => {
