@@ -62,36 +62,40 @@ const PreviousDiagrams = () => {
       });
   };
   const handlePNGDownload = (diagram, downloadLink) => {
-    const url2 = `http://localhost:3001/getimage?chtype=${encodeURIComponent(
-      diagramData.diagram_type
-    )}?filename=${encodeURIComponent(localStorage["filename"])}`;
+    if (diagram) {
+      const diagramType = diagram.diagram_type;
+      const filename = localStorage["filename"].replace(".csv", "");
+      const url = `http://localhost:3001/getimage?chtype=${encodeURIComponent(
+        diagramType
+      )}&filename=${encodeURIComponent(filename)}`;
 
-    fetch(url2, {
-      method: "GET",
-    })
-      .then((response) => {
-        console.log(response.status);
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error("Error: " + response.status);
-        }
+      fetch(url, {
+        method: "GET",
       })
-      .then((data) => {
-        console.log(data);
-        setDiagramData(data);
-        if (data) {
-          setUploadSuccess(true); // Set upload success status
-          // Handle the response from the backend
+        .then((response) => {
+          console.log(response.status);
+          if (response.ok) {
+            return response.json();
+          } else {
+            throw new Error("Error: " + response.status);
+          }
+        })
+        .then((data) => {
           console.log(data);
-        } else {
+          setDiagramData(data);
+          if (data) {
+            setUploadSuccess(true); // Set upload success status
+            // Handle the response from the backend
+            console.log(data);
+          } else {
+            setErrorAlertOpen(true);
+          }
+        })
+        .catch((error) => {
+          console.error(error);
           setErrorAlertOpen(true);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setErrorAlertOpen(true);
-      });
+        });
+    }
   };
 
   const handleHTMLDownload = (diagram, downloadLink) => {
