@@ -6,12 +6,13 @@ import { Button, FormLabel } from "@mui/material";
 const NewChartForm = () => {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [errorAlertOpen, setErrorAlertOpen] = useState(false);
+  const [userData, setuserData] = useState(null);
   useEffect(() => {
-    const url2 = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
+    const url = `http://localhost:3001/getuserinfo?mail=${encodeURIComponent(
       localStorage["email"]
     )}`;
 
-    fetch(url2, {
+    fetch(url, {
       method: "GET",
     })
       .then((response) => {
@@ -27,6 +28,7 @@ const NewChartForm = () => {
         if (data) {
           setUploadSuccess(true); // Set upload success status
           // Handle the response from the backend
+          setuserData(data);
           console.log(data);
         } else {
           setErrorAlertOpen(true);
@@ -46,9 +48,12 @@ const NewChartForm = () => {
           <form>
             <FormLabel>Number of Charts :</FormLabel>
           </form>
-          <form>
-            <FormLabel>Available credits :</FormLabel>
-          </form>
+          {userData &&
+            userData.map((user) => (
+              <form key={user.id}>
+                <FormLabel>Available credits: {user.diagram_Limit}</FormLabel>
+              </form>
+            ))}
           <form>
             <FormLabel>Last Login : {localStorage["last_login"]} </FormLabel>
           </form>
