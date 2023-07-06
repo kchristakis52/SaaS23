@@ -24,6 +24,15 @@ services:
       - messaging
     command: >
       sh -c "sleep 9 && node setup.js"
+  mysql:
+    image: mysql
+    restart: always
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: SaaSDB
+    volumes:
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
   gateway:
     build:
       context: ./gateway
