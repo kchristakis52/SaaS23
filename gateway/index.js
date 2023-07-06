@@ -183,6 +183,7 @@ app.get('/getuserinfo', (req, res) => {
       last_name: user.last_name,
       last_login: user.last_login,
       diagram_count: user.diagram_count,
+      diagram_Limit: user.diagram_Limit,
     };
 
     res.status(200).json(userInfo);
