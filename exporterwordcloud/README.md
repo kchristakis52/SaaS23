@@ -1,6 +1,3 @@
 # MICROSERVICE
 
-## (name)
-
-(description)
-
+## Word Cloud Diagram Exporter

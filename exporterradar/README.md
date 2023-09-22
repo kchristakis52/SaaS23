@@ -1,6 +1,3 @@
 # MICROSERVICE
 
-## (name)
-
-(description)
-
+## Radar Plot Exporter

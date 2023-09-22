@@ -1,6 +1,3 @@
 # MICROSERVICE
 
-## (name)
-
-(description)
-
+## Column Graph Exporter
